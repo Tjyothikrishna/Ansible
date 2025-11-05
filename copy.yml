@@ -1,0 +1,19 @@
+---
+- name: copy file from source to destination
+  hosts: 192.168.1.55
+  vars_prompt:
+  - name: s_fname
+    prompt: "provide source file name(adsolute path)"
+  - name: d_fname
+    prompt: "provide destination file name(adsolute path)"
+    private: yes
+  gather_facts: no
+  become: yes
+  remote_user: ansible
+  tasks:
+  - name: copy file
+    copy:
+      src: "{{ s_fname }}"
+      dest: "{{ d_fname }}"
+    ignore_errors: yes
+...

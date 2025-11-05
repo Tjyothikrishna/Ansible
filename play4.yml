@@ -1,0 +1,15 @@
+---
+- name: Reboot all servers safely
+  hosts: all
+  become: yes
+  remote_user: ansible
+  gather_facts: yes
+  tasks:
+  - name: Reboot the servers and wait for them to come back
+    ansible.builtin.reboot:
+      msg: "Reboot initiated by Ansible"
+      connect_timeout: 15
+  - name: Confirm server is back online
+    ansible.builtin.debug:
+      msg: "Server {{ ansible_facts['hostname'] }} is back online "
+...
