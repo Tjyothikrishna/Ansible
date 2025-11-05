@@ -1,9 +1,0 @@
----
-- name: Play to build httpd website
-  hosts: localhost
-  become: true
-  vars_files: 
-   - myweb.yml
-  tasks:
-  - name: Task to install {{
-
