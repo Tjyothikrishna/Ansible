@@ -16,4 +16,5 @@
         comment: "{{ usr.comment }}"
         shell: "{{ usr.shell }}"
         state: present
+        hlo everyone 
 ...
