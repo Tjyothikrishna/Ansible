@@ -1,0 +1,22 @@
+#Commonly used magic variables
+# hostvars: you can access variables defined by any host in the play
+# groups: print the dictionary or map with all groups in the inventory and each group has the list of hosts that belongs to all
+# group_names: List groups that current host is part of
+# inventory_hostname: Inventory name of the current host being iterated over in the play
+---
+- name: Demonstrate magic variable
+  hosts: web
+  tasks:
+  - name: print the hostgroup
+    debug:
+      var: groups
+  - name: print the host_names
+    debug:
+      var: group_names
+  - name: print the inventory_hostname
+    debug:
+      var: inventory_hostname
+  - name: print the variables
+    debug:
+      var: hostvars
+...

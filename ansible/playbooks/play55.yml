@@ -1,0 +1,14 @@
+---
+- name: Play to copy file from remote server to local server
+  hosts: 192.168.1.41
+  become: yes
+  vars:
+    fname: /etc/hosts
+    dest_dir_name: /home/ansible/
+  tasks:
+    - name: Fetch {{ fname }} from remote server to local server
+      ansible.builtin.fetch:
+        src: "{{ fname }}"
+        dest: "{{ dest_dir_name }}"
+        flat: yes
+...

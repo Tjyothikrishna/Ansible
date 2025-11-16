@@ -1,0 +1,5 @@
+- name: Copy website files
+  ansible.builtin.copy:
+    src: files/web/
+    dest: "{{ doc_root }}/"
+    

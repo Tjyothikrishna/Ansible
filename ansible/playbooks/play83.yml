@@ -1,0 +1,15 @@
+---
+- name: play to Demonstrate looping with with_dict. Iterate over dictionary
+  hosts: localhost
+  tasks:
+  - name: print dict
+    ansible.builtin.debug:
+      msg: " NAME: {{ item.key }} assigned with UID: {{ item.value.uid }}  and its SHELL: {{ item.value.shell }}"
+    with_dict:
+      harika:
+        uid: 5001
+        shell: /bin/bash
+      mounika:
+        uid: 5002
+        shell: /bin/ksh
+...

@@ -1,0 +1,29 @@
+---
+- name:  using uri modue to test if the page is working
+  hosts: localhost
+  become: true
+  vars_prompt:
+   prompt: "Enter URL to test"
+   name: url
+   default: http://192.168.1.131/index.html
+   private: no
+  gather_facts: false
+  tasks:
+   - name: Demonstrate uri module to check if the give url is working
+     uri:
+      url: "{{url}}"
+      return_content: yes
+      validate_certs: false
+      timeout: 5
+     register: out
+     ignore_errors: yes
+   - name: check if its failed
+     fail:
+      msg: Page not found
+     when: out.status == 404
+
+   - name: check if the page is found
+     debug:
+      msg: "page is found"
+     when: out.status == 200
+...

@@ -1,0 +1,9 @@
+---
+- name: play to reboot remote server
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Reboot remote server
+      ansible.builtin.reboot:
+      
+...

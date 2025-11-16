@@ -1,0 +1,32 @@
+---
+#A single Playbook can contain multiple plays
+#Beloow demonstrate the same
+- name: Play1 for install http, firewalld and https
+  hosts: localhost
+  become: True
+  become_user: root
+  tasks:
+   - name: Install http, firewalld and https
+     yum:
+      name:
+       - httpd
+       - mod_ssl
+       - firewalld
+      state: latest
+
+- name: Play2 for starting firewalld and http web services
+  hosts: localhost
+  become: True
+  become_user: root
+  tasks:
+   - name: Start firewalld service
+     ansible.builtin.service:
+       name: firewalld
+       state: started
+       enabled: yes
+   - name: Start httpd service
+     ansible.builtin.service:
+       name: httpd
+       state: started
+       enabled: yes
+...

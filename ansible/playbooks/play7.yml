@@ -1,0 +1,11 @@
+---
+- name: This is able to creater a hardlink
+  hosts: localhost
+  become: true
+  tasks:
+   - name: creater an empty file
+     ansible.builtin.file:
+       src: /etc/passwd
+       dest: /home/ansible/password
+       state: hard #hard link is create
+...

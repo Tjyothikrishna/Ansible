@@ -1,0 +1,19 @@
+---
+- name: play to Demonstrate synchronize
+  hosts: localhost
+  gather_facts: no
+  become: yes
+  tasks:
+  - name: Install rsync if its not present
+    ansible.builtin.yum:
+      name: rsync
+      state: present
+  - name: create a dest directory does not exist
+    ansible.builtin.file:
+      path: /home/ansible/playbooks/testdir
+      state: directory
+  - name: Demonstrate Synchronize module
+    ansible.posix.synchronize:
+      src: /home/ansible/playbooks/
+      dest: /root/play
+...

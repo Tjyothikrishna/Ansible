@@ -1,0 +1,13 @@
+---
+- name: Demonstrate variables in Ansible
+#Get variables defined in the file
+  hosts: localhost
+  vars:
+   os: linux
+  vars_files:
+    - vars/jk.yml
+  tasks:
+  - name: print variable value
+    ansible.builtin.debug:
+      msg: "OS is : {{ os }}, city: {{ city_name }}, state: {{ city_state }}. language: {{ city_lang }}"
+...

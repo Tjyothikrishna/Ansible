@@ -1,0 +1,14 @@
+---
+- name: Demonstrate nested loops with with_nested
+  hosts: localhost
+  tasks:
+  - name: generate user and group combinations
+    ansible.builtin.debug:
+      msg: "User: {{ item.0 }} belongs to Group: {{ item.1 }}"
+    with_nested:
+      - [ 'mounika', 'harika' ]
+      - [ 'developer', 'operator' ]
+...
+# for i in 1 2 3
+# for i in a b c
+# print i j

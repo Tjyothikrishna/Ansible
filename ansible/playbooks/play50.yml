@@ -1,0 +1,17 @@
+#14.Write a playbook that uses the yum module to check whether git is installed,
+# register the output, and display whether a change was made.
+---
+- name: Check if git is installed
+  hosts: localhost
+  gather_facts: no
+  become: yes
+  tasks:
+  - name: Check if git is installed
+    ansible.builtin.yum:
+      name: git
+      state: present
+    register: installed
+  - name: Display whether git was installed
+    ansible.builtin.debug:
+      msg: "Git was installed: {{ installed }}"
+...

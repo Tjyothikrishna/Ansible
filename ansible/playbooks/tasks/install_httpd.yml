@@ -1,0 +1,5 @@
+- name: Install web server package
+  ansible.builtin.yum:
+    name: "{{ pkg_name }}"
+    state: present
+  notify: web_start

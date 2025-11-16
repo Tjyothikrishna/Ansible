@@ -1,0 +1,12 @@
+---
+- name: Demonstrate debug var
+  hosts: localhost
+  gather_facts: no
+  become: True
+  vars:
+    hero: Bahubali
+  tasks:
+  - name: work with debug
+    ansible.builtin.debug:
+      var: hero
+...

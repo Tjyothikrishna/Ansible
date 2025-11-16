@@ -1,0 +1,12 @@
+---
+- name: Demonstrate of raw module
+#User raw module to Execute command
+# User to Execute command where there is no python Install
+# such as swtiches or routers etc..
+  hosts: localhost
+  become: yes
+  tasks:
+  - name: Execute command using raw module
+    ansible.builtin.raw: 
+      uptime > /tmp/uptime_output.txt
+...

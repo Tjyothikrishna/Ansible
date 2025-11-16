@@ -1,0 +1,15 @@
+---
+- name: Work with loop_control. This give fine-grained control inside loops
+  hosts: localhost
+  become: yes
+  tasks:
+  - name: Install packages with loop control
+    ansible.builtin.debug:
+      msg: " Item no {{ i }} belongs to {{ item }}"
+    loop:
+      - httpd
+      - php
+      - mariadb
+    loop_control:
+      index_var: i
+...

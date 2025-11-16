@@ -1,0 +1,36 @@
+---
+- name: Play to Install httpd package
+  hosts: sapadm
+  become: true
+  become_user: root
+  gather_facts: false
+
+  tasks:
+    - name: Task to copy my repo file to remote server 
+      copy:
+        src: /etc/yum.repos.d/rhel95.repo
+        dest: /etc/yum.repos.d/rhel95.repo
+
+    - name: Task to install httpd package
+      yum:
+        name: httpd
+        state: latest
+
+    - name: Task to add the port in the firewall
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+
+    - name: Create index.html 
+      copy:
+        dest: /var/www/html/index.html
+        content: "<html><h1><center>This is built by ansible</center></h1></html>"
+        mode: '0644'
+
+    - name: Start http service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+...

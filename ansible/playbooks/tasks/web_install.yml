@@ -1,0 +1,7 @@
+- name: Install http web
+  yum:
+   name: "{{pkg_name}}"
+   state: installed
+  notify: 
+   - web_start
+

@@ -1,0 +1,22 @@
+---
+- name:
+  hosts: localhost
+  become: true
+  tasks:
+   - name: task1
+     copy:
+      src: /test123.txt
+      dest: /tmp/sample.txt
+     ignore_errors: true
+
+   - name: task2
+     copy:
+      src: /test23.txt
+      dest: /tmp/sample1.txt
+     ignore_errors: true
+   
+   - name: task3
+     copy:
+      src: /etc/motd
+      dest: /tmp/motd
+     ignore_errors: true

@@ -1,0 +1,14 @@
+#13.Use the command module to run df -h, register the output, and display the available space in /.
+---
+- name: Check available space in root directory
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Run df -h command
+      ansible.builtin.command:
+        cmd: df -h /
+      register: df
+    - name: Display available space in root directory
+      ansible.builtin.debug:
+        msg: "Available space in : {{ df['stdout_lines'] }}"
+...

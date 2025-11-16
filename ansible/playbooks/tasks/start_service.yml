@@ -1,0 +1,5 @@
+- name: Start {{ ser_name }} service
+  ansible.builtin.service:
+    name: "{{ ser_name }}"
+    state: "{{ ser_state }}"
+  when: out.changed

@@ -1,0 +1,4 @@
+  pkg_name1: autofs
+  pkg_name2: nfs-utils
+  ser_name: nfs-server
+  ser_state: started

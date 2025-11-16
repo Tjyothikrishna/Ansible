@@ -1,0 +1,37 @@
+---
+- name: Create a volume group using pv 
+  hosts: localhost
+  become: True
+  become_user: root
+  tasks:
+   - name: Create vg
+     community.general.lvg:
+       vg: jkvg
+       pvs: /dev/sdd
+       pesize: 16
+
+   - name: Create a lv
+     lvol:
+       vg: jkvg
+       lv: jklv
+       size: 512
+       pvs: /dev/sdd
+
+   - name: Create filesystem
+     community.general.filesystem:
+       fstype: xfs
+       dev: /dev/jkvg/jklv
+
+   - name: Create mount point if it doesnt exists. Do this before it attempts to mount
+     ansible.builtin.file:
+       path: /jkfs
+       state: directory
+       mode: 0755
+
+   - name: Mount the filesystem
+     mount: 
+       path: /jkfs
+       src: /dev/jkvg/jklv
+       fstype: xfs
+       state: mounted
+...    

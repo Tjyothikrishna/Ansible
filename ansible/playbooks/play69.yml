@@ -1,0 +1,13 @@
+---
+- name: Call the script from shell module
+  hosts: [192.168.1.41,192.168.1.55,192.168.1.42,192.168.1.39]
+  become: yes
+  tasks:
+  - name: push script to remote server
+    ansible.builtin.copy:
+      src: jkscript.sh
+      dest: /tmp/jkscript.sh
+      mode: '0555'
+  - name: Shell module to executea script
+    ansible.builtin.shell: /tmp/jkscript.sh
+...

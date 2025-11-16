@@ -1,0 +1,19 @@
+---
+- name: Demonstrate shell module. This is used execute a shell command
+  hosts: localhost
+  become: yes
+  tasks:
+  - name: Task to execute a shell command
+    ansible.builtin.shell: vgs
+    register: out
+  - name: print the output
+    ansible.builtin.debug:
+      msg: "{{ out.stdout_lines }}"
+...
+#Shell module runs command via shell, by default it uses /bin/sh. It supports pipe, 
+#redirection we usually use shell module for command needing shell features.
+# Running command using shell module, there might be a risk of shell injection.
+# command module does not run via shell.No support of pipes, redirection and can be used to execute simple commands.
+# This is no risk of shell injection.
+# For example, if you want to run echo $HOME, you must use shell module and command module wont work.
+# Please note that it is important you are aware of the differences between command and shell modules.

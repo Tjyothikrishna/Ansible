@@ -1,0 +1,12 @@
+---
+- name: Demonstrate lininfile - example8 - having backup
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Taking a backup before modifying
+    ansible.builtin.lineinfile:
+      path: /home/ansible/playbooks/vars/ashish.txt
+      line: "Amrutha"
+      insertafter: ^jk
+      backup: yes #takes file backup before you modify the file
+...

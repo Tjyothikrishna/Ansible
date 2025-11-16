@@ -1,0 +1,25 @@
+---
+- name: Play to copy file from remote server to remote server
+  hosts: 
+  - 192.168.1.55
+  - 192.168.1.41
+  - 192.168.1.42
+  become: yes
+  vars:
+    fname: /etc/hosts
+    dest_dir_name: /opt/servers
+  tasks:
+  - name: Create dir if it does not exists
+    ansible.builtin.file:
+      path: "{{ dest_dir_name }}"
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+  - name: Task to copy {{ fname }} from local server two remote server
+    ansible.builtin.copy:
+      src: "{{ fname }}"
+      dest: "{{ dest_dir_name }}"
+      remote_src: yes
+      backup: yes
+...

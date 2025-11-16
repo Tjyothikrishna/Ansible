@@ -1,0 +1,16 @@
+---
+- name: play to Demonstrate synchronize
+  hosts: 192.168.1.46
+  gather_facts: no
+  become: yes
+  tasks:
+  - name: Install rsync if its not present
+    ansible.builtin.yum:
+      name: rsync
+      state: present
+  - name: Demonstrate Synchronize module
+    ansible.posix.synchronize:
+      mode: pull
+      src: /zsync
+      dest: /root/play_01
+...

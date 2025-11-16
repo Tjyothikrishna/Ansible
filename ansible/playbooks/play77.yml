@@ -1,0 +1,14 @@
+---
+- name: Install multiple packages
+  hosts: web
+  become: yes
+  tasks:
+    - name: Install  packages
+      yum:
+        name:
+          - vim
+          - git
+          - wget
+          - curl
+        state: present
+...

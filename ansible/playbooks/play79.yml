@@ -1,0 +1,15 @@
+---
+- name: Test the variable
+  hosts: localhost
+  vars:
+    my_users:
+      - name: test_users
+        shell: /bin/bash
+      - name: sap_user
+        shell: /bin/bash  
+  tasks:
+  - name: print
+    ansible.builtin.debug:
+      msg: " NAME: {{ item.name }} SHELL: {{ item.shell }}"
+    loop: "{{ my_users }}"
+...

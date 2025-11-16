@@ -1,0 +1,11 @@
+---
+- name: Play to demonstrate unarchive
+  hosts: web
+  become: yes
+  tasks:
+    - name: Task to unarchive etc_archive.tar.gz on remote host
+      ansible.builtin.unarchive:
+        src: /tmp/etc_archive.tar.gz
+        dest: /opt/ansible
+        remote_src: yes
+...

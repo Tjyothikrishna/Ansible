@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: url("img.jpg") no-repeat center center/cover; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container with Blur Effect */
+.container {
+    background: rgba(255, 255, 255, 0.2); /* Transparent background */
+    backdrop-filter: blur(10%); /* Blur effect */
+    width: 400px;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+/* Form */
+form {
+    margin: 0 1.5rem;
+}
+
+/* Title */
+.form-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #fff; /* Make text visible on dark images */
+    margin-bottom: 1.5rem;
+}
+
+/* Input Fields */
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.input-group i {
+    position: absolute;
+    left: 10px; /* Move icon to the left */
+    font-size: 18px;
+    color: #fff;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 12px 12px 40px; /* Adjust padding for icon */
+    font-size: 15px;
+    border: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+    background: transparent;
+    color: white;
+    outline: none;
+}
+
+.input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.input-group input:focus {
+    border-bottom: 2px solid #ff4081;
+}
+
+.input-group label {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    transition: 0.3s ease all;
+    font-size: 15px;
+}
+
+input:focus ~ label,
+input:not(:placeholder-shown) ~ label {
+    top: -10px;
+    font-size: 13px;
+    color: #ff4081;
+}
+
+/* Recover Password */
+.recover {
+    text-align: right;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.recover a {
+    text-decoration: none;
+    color: #ff4081;
+    transition: 0.3s;
+}
+
+.recover a:hover {
+    color: #ff80ab;
+}
+
+/* Button */
+button {
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    width: 100%;
+    background: #ff4081;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #c60055;
+}
+
+/* Switch Between Sign In & Sign Up */
+#signUpButton,
+#signInButton {
+    color: #ff4081;
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#signUpButton:hover,
+#signInButton:hover {
+    text-decoration: underline;
+    color: #ff80ab;
+}
+
+/* Fade-Out Animation */
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .container {
+        width: 90%;
+        padding: 1.5rem;
+    }
+}

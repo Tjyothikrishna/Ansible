@@ -1,0 +1,17 @@
+---
+- name: print hostvariable using magic variable for specific host
+  hosts: ['karthik.alclabs.in,likitha.alclabs.in']
+  tasks:
+  - name: play to print specific hostvars
+    debug:
+      var: hostvars['karthik.alclabs.in']['user_name']
+  - name: play to print specific hostvars
+    debug:
+      var: hostvars['likitha.alclabs.in']['user_name']
+  - name: play to print specific hostvars
+    debug:
+      var: hostvars['karthik.alclabs.in']['ansible_hostname']
+  - name: play to print specific hostvars
+    debug:
+      var: hostvars['likitha.alclabs.in']['ansible_hostname']
+...

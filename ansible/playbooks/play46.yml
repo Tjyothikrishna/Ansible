@@ -1,0 +1,13 @@
+#10.Pass an extra variable (username=adminuser) at runtime 
+#using --extra-vars and use it in a playbook to create the user.
+---
+- name: Create a user with an extra variable
+  hosts: localhost
+  gather_facts: no
+  become: yes
+  tasks:
+  - name: Create user with provided username
+    ansible.builtin.user:
+      name: "{{ username }}"
+      state: present
+...

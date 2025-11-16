@@ -1,0 +1,12 @@
+---
+- name: Demonstrate variables in by group_vars
+#Get variables defined in the file
+  hosts: 
+   - sapdb
+   - admdb
+  gather_facts: no
+  tasks:
+  - name: print variable value
+    ansible.builtin.debug:
+      msg: "OS is : {{ os }}, color: {{ color}}"
+...

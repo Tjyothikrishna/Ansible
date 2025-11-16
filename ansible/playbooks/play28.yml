@@ -1,0 +1,28 @@
+---
+- name: Creating a user by using prompt variables
+  hosts: localhost
+  vars_prompt:
+   - name: username
+     prompt: "Enter user name "
+     private: no
+   - name: uid
+     prompt: "Enter user id  [In range of 3000-4000]"
+     private: no
+   - name: comment
+     prompt: "Enter Comment "
+     private: no
+   - name: shell
+     prompt: "Enter user shell "
+     private: no
+     default: /bin/bash
+  become: True
+  become_user: root   
+  tasks: 
+  - name: Create User 
+    user:
+      name: "{{ username }}"
+      uid: "{{ uid }}"
+      comment: "{{ comment }}"
+      shell: "{{ shell }}"
+      state: present
+...

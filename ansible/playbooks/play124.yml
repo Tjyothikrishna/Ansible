@@ -1,0 +1,12 @@
+---
+- name: Play  to fail the task
+  hosts: localhost
+  tasks:
+   - name:
+     fail:
+      msg: "I failed"
+     ignore_errors: true    
+   - name: 
+     debug: 
+      msg: "Hi there"
+   

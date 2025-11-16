@@ -1,0 +1,11 @@
+---
+- name: Demonstrate lininfile - example3
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Create a file and add the line 
+    ansible.builtin.lineinfile:
+      path: /home/ansible/statement.txt
+      regexp: ^Yuvaraj # Search for the line that starts with Yuvaraj
+      state: absent # Remove the line that was found from the above regular expression
+...

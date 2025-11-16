@@ -1,0 +1,16 @@
+#15.Create an Ansible Vault file that stores a MySQL root password. 
+#Write a playbook that uses this variable to print the password with debug.
+---
+- name: Print MySQL root password from Ansible Vault
+  hosts: localhost
+  become: yes
+  remote_user: ansible
+  become_user: root
+  gather_facts: no
+  vars_files:
+   - vars/sql.yml
+  tasks:
+    - name: Print MySQL root password
+      ansible.builtin.debug:
+        msg: "MySQL root password is: {{ pass }}"
+...

@@ -1,0 +1,15 @@
+---
+- name: Create a user with given variable
+  hosts: localhost
+  gather_facts: no
+  vars:
+    usr:
+      usr_name: joe
+      usr_passwd: joe
+      usr_first_name: joe
+      usr_last_name: britt
+  tasks:
+    - name: To test the variables
+      ansible.builtin.debug:
+        msg: "User_name: {{ usr['usr_name'] }} password: {{ usr['usr_passwd'] }} User Fullname: {{ usr['usr_first_name'] }} {{ usr['usr_last_name'] }}"
+...

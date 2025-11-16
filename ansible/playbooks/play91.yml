@@ -1,0 +1,13 @@
+---
+- name: playbook to work with until loop. Keep typing the task until it succeeds or retry count exhausts
+  hosts: localhost
+  become: yes
+  tasks:
+  - name: Task to wait/retry until service is active
+    ansible.builtin.command: systemctl is-active httpd
+    register: out
+    until: out.stdout == "active"
+    retries: 5
+    delay: 2
+...
+# Retried 5 times with delay of 2 seconds

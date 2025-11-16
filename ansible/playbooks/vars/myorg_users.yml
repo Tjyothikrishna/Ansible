@@ -1,0 +1,15 @@
+users:
+ - name: sachin
+   job: developer
+ - name: chris
+   job: devops
+ - name: christina
+   job: devops
+ - name: jason
+   job: developer
+ - name: george
+   job: developer
+ - name: cregory
+   job: devops
+ - name: lorin
+   job: devops

@@ -1,0 +1,14 @@
+---
+- name: play to Demonstrate debug
+  hosts: localhost
+  become: true
+  tasks:
+  - name: debug module
+    ansible.builtin.debug:
+      msg: "Did you change ??"
+    changed_when: true  # This make change: True
+    register: out
+  - name: print out
+    ansible.builtin.debug:
+      var: out
+...

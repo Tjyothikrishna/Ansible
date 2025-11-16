@@ -1,0 +1,15 @@
+#6.Create a static inventory file that defines two groups: web and db.
+#Assign different variables to each group (like http_port for web and db_port for db). 
+#Write a playbook that prints these variables using the debug module.
+---
+- name: print variables using the debug module.
+  hosts: 
+   - web
+   - db
+  gather_facts: no
+  tasks:
+    - name: Print group variable
+      debug:
+        msg: "Port is {{ port }}"
+...
+  

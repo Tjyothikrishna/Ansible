@@ -1,0 +1,11 @@
+---
+- name: Play to print variable content using debug module
+  hosts: localhost
+  vars:
+    stuname: jk
+  become: yes
+  tasks: 
+  - name: Task to demonstrate debug module
+    ansible.builtin.debug:
+      var: stuname
+...

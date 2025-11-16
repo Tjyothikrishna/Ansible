@@ -1,0 +1,15 @@
+---
+- name: My First Playbook
+  hosts: sapadm
+  become: True
+  gather_facts: false 
+  become_user: root
+  tasks: 
+    - name: Create User
+      user:
+         name: jk-user
+         password: $6$fhvebfipve$lslF0nyUYobjxdsNNCANrAPEA0hJ4qWjmjMBoFr6lTUbJ3OVB5sFyGYB2w0vNEdP.68X3L5YpSYkjmrBsybPF/
+         comment: "This is my First user Create by ansible "  
+         state: present
+         #state: absent
+...

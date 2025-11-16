@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wi-Fi Healthcare</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <img src="logo.png" alt="Wi-Fi Healthcare Logo"> 
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#patientList">Patient List</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+     <div class='box'>
+    <div class='wave -one'></div>
+    <div class='wave -two'></div>
+    <div class='wave -three'></div>
+  </div>
+    <section id="home">
+        <div class="home-content">  
+            <h2>Welcome to Wi-Fi Healthcare</h2>
+        </div>
+    </section>
+    <section id="patientList">
+            <div class="patient-details">
+                <h2>Patient List</h2>
+                <ul id="patients"></ul> 
+            </div>
+
+        <div class="home-buttons">  
+            <button onclick="location.href='add_patient.html'">Add Patient</button>
+            <button onclick="location.href='delete_patient.html'">Delete Patient</button>
+            <button onclick="location.href='find_patient.html'">Find Patient</button>
+        </div>  
+    </section>
+    
+    <!-- About, Contact & Footer Below -->
+    <section id="about">
+        <h2>About Us</h2>
+        <p>Wi-Fi Healthcare refers to the use of wireless networking technologies (primarily Wi-Fi) to connect medical devices, staff, patients, and data systems in hospitals, clinics, and remote health settings. It enables real-time data transmission, mobility, and efficient communication across the healthcare ecosystem.</p>
+        <h3>Project Team</h3>
+        <ul>
+            <li><strong>A. YASWANTH:</strong> 1KG21EC005</li>
+            <li><strong>B. MARUTHI:</strong> 1KG21EC016</li>
+            <li><strong>M. LAKSHMI:</strong> 1KG21EC044</li>
+            <li><strong>M. LIKITHA:</strong> 1KG21EC052</li>
+        </ul>
+    
+        <h3>Under the Guidance</h3>
+        <ul>
+            <li><strong>Mr. Syed Waseem Tabraiz:</strong>
+                Assistant Professor,Department of ECE, KSSEM Bengaluru.
+            </li>
+        </ul>
+    </section>
+    
+    
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>K.S. SCHOOL OF ENGINEERING AND MANAGEMENT 
+            DEPARTMENT OF ELECTRONICS AND COMMUNICATION ENGINEERING</p>
+        
+        <div class="contact-details">
+            <p><strong>Email:</strong> <a href="mailto:syedwaseem.tabraiz@kssem.edu.in">syedwaseem.tabraiz@kssem.edu.in</a></p>
+            <p><strong>Phone:</strong> <a href="tel:+91 9740391814">+91 9740391814</a></p>
+        </div>
+    </section>
+    
+    
+    <footer>
+        <p>&copy; 2025 Wi-Fi Healthcare. All rights reserved.</p>
+    </footer>   
+</body>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBz7C87VuLddHDS-LNHnScxTFhbXUqs1J4",
+        authDomain: "kssem-wifihealthcare.firebaseapp.com",
+        databaseURL: "https://kssem-wifihealthcare-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "kssem-wifihealthcare",
+        storageBucket: "kssem-wifihealthcare.appspot.com",
+        messagingSenderId: "904758117254",
+        appId: "1:904758117254:web:74184c02b1ea84c291e207"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const patientList = document.querySelector("#patients");
+
+    function loadPatients() {
+        get(ref(db, "Patients/"))
+            .then(snapshot => {
+                if (snapshot.exists()) {
+                    patientList.innerHTML = Object.entries(snapshot.val()).map(([id, data]) => 
+                        `<li><a href="patient.html?id=${id}">${data.Name}</a></li>`).join('');
+                } else {
+                    patientList.innerHTML = '<li>No patients found.</li>';
+                }
+            }).catch(console.error);
+    }
+
+    loadPatients();
+</script>
+
+</html>

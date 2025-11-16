@@ -1,0 +1,17 @@
+---
+- name: play to Demonstrate conditional statement example
+  hosts: localhost
+  become: true
+  vars:
+    environmenrt: production
+  tasks:
+  - name: task to start a webserver
+    ansible.builtin.service:
+      name: httpd
+      state: started
+    when: environmenrt == 'production'
+  - name: Task to print message
+    ansible.builtin.debug:
+      msg: "you can perform this task in this environment {{ environmenrt }}"
+    when: environmenrt == 'development'
+...

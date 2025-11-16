@@ -1,0 +1,11 @@
+---
+- name: Demonstrate variables in Ansible
+  hosts: localhost
+  vars:
+   os: linux
+  gather_facts: no
+  tasks:
+  - name: print variable value
+    ansible.builtin.debug:
+      msg: "OS is : {{ os }}"
+...

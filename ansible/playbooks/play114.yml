@@ -1,0 +1,23 @@
+---
+- name: play to Demonstrate debug
+  hosts: localhost
+  become: true
+  tasks:
+  - name: debug module
+    ansible.builtin.debug:
+      msg: "Did you change ??"
+    changed_when: true  # This make change: True
+    notify: one_more
+  - name: debug module
+    ansible.builtin.debug:
+      msg: "Not sure if I am changed ??"
+    changed_when: true  # This make change: True
+    notify: print_out
+  handlers:
+  - name: print_out
+    ansible.builtin.debug:
+      msg: "I am in HANDLERS"
+  - name: one_more
+    ansible.builtin.debug:
+      msg: "yes....  I am in HANDLERS"
+...

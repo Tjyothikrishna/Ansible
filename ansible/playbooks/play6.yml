@@ -1,0 +1,14 @@
+---
+- name: This is able to creater a softlink
+  hosts: localhost
+  become: true
+  tasks:
+   - name: creater an empty file
+     ansible.builtin.file:
+       src: /home/ansible/new_ansi_dir
+       dest: /home/ansible/playbooks-01/soft
+       state: link #Soft link is create
+       owner: root
+       group: ansible
+       mode: '0750'
+...

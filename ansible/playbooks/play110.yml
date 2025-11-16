@@ -1,0 +1,26 @@
+---
+- name: play to Demonstrate handlers in ansible 
+  hosts: localhost
+  become: true
+  tasks:
+  - name: include_vars
+    ansible.builtin.include_vars: vars/pack.yml
+  - name: install "{{ pkg_name2 }}" package
+    ansible.builtin.yum:
+      name: "{{ pkg_name2 }}"
+      state: latest
+    notify: start_nfs
+#Handlers is processed  with notify statement when changed occurs in the task
+#If no change occurs, handlers will be ignored. ie handlers will not be notified
+#When you notify the same handlers multiple times, it run only once
+#Handlers are invoked at the end of all tasks process.
+#They are processed in the same order they appear in handlers section and not in the order the are notified
+  - name: print me
+    ansible.builtin.debug:
+      msg: "Hellow world"
+  handlers:
+  - name: start_nfs
+    ansible.builtin.service:
+      name: "{{ ser_name }}"
+      state: started
+...

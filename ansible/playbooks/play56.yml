@@ -1,0 +1,14 @@
+---
+- name: Disable direct root logins ssh
+  hosts: all
+  become: yes
+  remote_user: ansible
+  gather_facts: no
+  tasks: 
+  - name: Task to modify(replace) permit root logins in /etc/ssh/sshd_config file
+    ansible.builtin.replace:
+      path: /etc/ssh/sshd_config
+      regexp: '^PermitRootLogin Yes'
+      replace: '^PermitRootLogin N0'
+      backup: yes
+...

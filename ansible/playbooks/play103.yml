@@ -1,0 +1,17 @@
+---
+- name: denmonstate when condition 
+  hosts: localhost
+  become: true
+  remote_user: ansible
+  tasks:
+   - name: task to install package
+     yum:
+      name: httpd
+      state: present
+     when: ansible_os_family == "Redhat" or ansible_os_family == "CentOS"
+   - name: task to install package
+     yum:
+      name: apache2
+      state: latest
+     when: ansible_os_family == "Debian" or ansible_os_family == "Ubuntu"
+...

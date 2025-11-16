@@ -1,0 +1,6 @@
+- name: Open web port in firewall
+  ansible.builtin.firewalld:
+    port: 99/tcp
+    permanent: true
+    immediate: true
+    state: enabled

@@ -1,0 +1,22 @@
+---
+- name: Demonstrate when condtion. Check if the result is changed, and if yes, take an action
+  hosts: localhost
+  vars:
+   install: true
+  remote_user: ansible
+  become: true
+  tasks:
+   - name: Install a packacke
+     yum:
+      name: httpd
+      state: latest
+     when: install | bool #you no need to provide that vlaue in curly braces like {{install}}
+     register: result
+   - name: Start the service if installation is done #if installation is done, the result be changed is true
+     service:
+      name: httpd
+      state: started
+     when: result.changed #result.changed is true if the installation is succeeded else it will be false. 
+     #The above module processed if the installation is done. else this is skipped
+    
+...

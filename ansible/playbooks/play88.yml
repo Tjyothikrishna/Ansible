@@ -1,0 +1,15 @@
+---
+- name: Work with loop_control. This give fine-grained control inside loops
+  hosts: localhost
+  become: yes
+  tasks:
+  - name: Install packages with loop control
+    yum:
+      name: "{{ mypkg }}"
+    loop:
+      - httpd
+      - php
+      - mariadb
+    loop_control:
+      loop_var: mypkg
+...

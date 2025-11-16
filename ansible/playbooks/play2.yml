@@ -1,0 +1,19 @@
+---
+- name: Playbook to Create a group and then user
+  hosts: sapdb
+  become: True
+  gather_facts: false 
+  become_user: root
+  tasks: 
+    - name: Create group
+      ansible.builtin.group:
+         name: jk-group  
+         state: present
+    - name: Task2 - Create a user and add user in above group as primary group
+      ansible.builtin.user:
+          name: jk-curl
+          group: jk-group
+          comment: "Carl for jk-group"
+          state: present
+          password: $6$fhvebfipve$lslF0nyUYobjxdsNNCANrAPEA0hJ4qWjmjMBoFr6lTUbJ3OVB5sFyGYB2w0vNEdP.68X3L5YpSYkjmrBsybPF/
+...

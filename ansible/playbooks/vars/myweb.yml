@@ -1,0 +1,9 @@
+web_port: 99
+web_ser: myweb.alclabs.in
+err_log_file: myweb_err.log
+acc_log_file: myweb_err.log
+doc_root: /myweb
+ser_admin: mywebadm@alclabs.in
+pkg_name: httpd
+
+

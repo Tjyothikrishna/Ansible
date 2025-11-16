@@ -1,0 +1,13 @@
+---
+- name: working loop with_sequence. This create of numbers or letters
+  hosts: localhost
+  become: yes
+  tasks:
+  - name: task to create multiple users
+    user:
+      name: "user{{ item }}"
+      state: present
+      # state: absent
+      # remove: yes
+    with_sequence: { db, app, qa }
+...
