@@ -1,6 +1,6 @@
 ---
 - name: My First Playbook
-  hosts: sapadm
+  hosts: localhost
   become: True
   gather_facts: false 
   become_user: root
