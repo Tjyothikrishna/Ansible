@@ -2,27 +2,27 @@
 - name: play to build httpd website
   hosts: localhost
   become: true
+
   tasks:
-  - name: Get  the variable values
-    ansible.builtin.include_vars:
-      file: myweb.yml
-  - name: include httpd task
-    ansible.builtin.include_tasks: tasks/install_httpd.yml
+    - name: Get the variable values
+      ansible.builtin.include_vars:
+        file: myweb.yml
 
-  - name: include firewall task
-    ansible.builtin.include_tasks: tasks/install_firewall.yml
+    - name: include httpd task
+      ansible.builtin.include_tasks: tasks/install_httpd.yml
 
-  - name: include add port task
-    ansible.builtin.include_tasks: tasks/addport.yml
+    - name: include firewall task
+      ansible.builtin.include_tasks: tasks/install_firewall.yml
 
-  - name: include conf task
-    ansible.builtin.include_tasks: tasks/create_conf.yml
+    - name: include add port task
+      ansible.builtin.include_tasks: tasks/addport.yml
 
-  - name: include copy web files task
-    ansible.builtin.include_tasks: tasks/copy_webfiles.yml
+    - name: include conf task
+      ansible.builtin.include_tasks: tasks/create_conf.yml
 
-handlers:
-  - import_tasks: handlers/web_start.yml
-  - import_tasks: handlers/firewalld_start.yml
+    - name: include copy web files task
+      ansible.builtin.include_tasks: tasks/copy_webfiles.yml
 
-...
+  handlers:
+    - import_tasks: handlers/web_start.yml
+    - import_tasks: handlers/firewalld_start.yml
