@@ -7,7 +7,7 @@
   tasks: 
     - name: Create User
       user:
-         name: jk-user01
+         name: jk-user012
          password: $6$fhvebfipve$lslF0nyUYobjxdsNNCANrAPEA0hJ4qWjmjMBoFr6lTUbJ3OVB5sFyGYB2w0vNEdP.68X3L5YpSYkjmrBsybPF/
          comment: "This is my First user Create by ansible "  
          state: present
