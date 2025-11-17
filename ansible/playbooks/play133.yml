@@ -26,3 +26,4 @@
     ansible.builtin.include_tasks: web_start.yml
   - name: include firewalld handler
     ansible.builtin.include_tasks: firewalld_start.yml
+...
