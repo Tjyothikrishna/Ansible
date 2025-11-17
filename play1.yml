@@ -9,9 +9,9 @@
        name: asian
        password: "{{ 'test123' | password_hash('sha512')}}"
        state: present
-   - name: Task to add SSH keys to the user
-     authorized_key:
-      user: asian
-      state: present
-      key: "{{lookup('file', '/home/ansible/id_rsa.pub')}}" 
+   # - name: Task to add SSH keys to the user
+   #   authorized_key:
+   #    user: asian
+   #    state: present
+   #    key: "{{lookup('file', '/home/ansible/id_rsa.pub')}}" 
 ...
