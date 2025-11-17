@@ -1,0 +1,15 @@
+---
+- name: Script to shutdown all servers 
+  hosts: all
+  become: yes
+  remote_user: ansible
+  become_user: root
+  gather_facts: yes 
+  tasks:
+  - name: Show shutdown server info
+    ansible.builtin.debug:
+      msg: "Server {{ ansible_facts['hostname'] }} IP is {{ ansible_facts['default_ipv4']['address'] }} was shut down."
+  - name: Shutdown servers 
+    ansible.builtin.command: 
+     cmd: shutdown -h 0
+...
