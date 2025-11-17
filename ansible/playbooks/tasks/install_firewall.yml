@@ -1,5 +1,10 @@
 - name: Install firewalld package
-  ansible.builtin.yum:
+  yum:
     name: firewalld
     state: present
-  notify: firewalld_start
+
+- name: Start and enable firewalld immediately
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
