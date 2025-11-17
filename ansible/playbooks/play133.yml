@@ -21,9 +21,8 @@
   - name: include copy web files task
     ansible.builtin.include_tasks: tasks/copy_webfiles.yml
 
-  handlers:
-  - name: include httpd handler
-    ansible.builtin.include_tasks: web_start.yml
-  - name: include firewalld handler
-    ansible.builtin.include_tasks: firewalld_start.yml
+handlers:
+  - import_tasks: handlers/web_start.yml
+  - import_tasks: handlers/firewalld_start.yml
+
 ...
