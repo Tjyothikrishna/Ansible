@@ -1,5 +1,5 @@
 - name: firewalld_start
-  ansible.builtin.service:
+  service:
     name: firewalld
     state: started
-    enabled: true
+    enabled: yes
