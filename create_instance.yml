@@ -1,0 +1,63 @@
+---
+- name: Create EC2 instance in AWS
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    region: "ap-south-1"         
+    vpc_id: "vpc-05a6ec325cfcc6bf2"       
+    keypair: "mumbai"            
+    instance_type: "t3.micro"
+    ami_id: "ami-03695d52f0d883f65"  
+    sg_name: "ansible-sg"
+    allowed_ports:
+      - 22
+      - 80
+      - 443
+
+  tasks:
+
+    # 1 - Create Security Group
+    - name: Create a security group
+      amazon.aws.ec2_security_group:
+        name: "{{ sg_name }}"
+        description: "Security group for EC2"
+        vpc_id: "{{ vpc_id }}"
+        region: "{{ region }}"
+        rules:
+          - proto: tcp
+            ports: "{{ allowed_ports }}"
+            cidr_ip: 0.0.0.0/0
+      register: sg_info
+
+    - debug:
+        msg: "Created SG ID: {{ sg_info.group_id }}"
+
+    # 2 - Launch EC2 Instance
+    - name: Launch EC2 instance
+      amazon.aws.ec2_instance:
+        name: "ansible-ec2"
+        instance_type: "{{ instance_type }}"
+        key_name: "{{ keypair }}"
+        image_id: "{{ ami_id }}"
+        region: "{{ region }}"
+        security_group: "{{ sg_info.group_id }}"
+        assign_public_ip: true
+        wait: yes
+        wait_timeout: 500
+      register: ec2_info
+
+    - debug:
+        msg: "Instance ID: {{ ec2_info.instance_ids[0] }}"
+
+    # 3 - Save Public IP for Jenkins later
+    - name: Save EC2 public IP
+      local_action:
+        module: copy
+        content: "{{ ec2_info.instances[0].public_ip_address }}"
+        dest: /tmp/ec2_ip.txt
+
+    - debug:
+        msg: "Public IP: {{ ec2_info.instances[0].public_ip_address }}"
+
