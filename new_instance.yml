@@ -58,7 +58,7 @@
     - debug:
         msg: "Instance IDs: {{ ec2_info.instance_ids }}"
 
-    # 3 - Save Private IPs into file
+    # 3 - Save Private IPs
     - name: Save private IPs into inventory file
       copy:
         dest: "{{ inventory_file }}"
@@ -68,7 +68,7 @@
           {{ inst.private_ip_address }}
           {% endfor %}
 
-    # 4 - Wait until SSH is available
+    # 4 - Wait SSH
     - name: Wait for SSH to be ready
       wait_for:
         host: "{{ item.public_ip_address }}"
@@ -77,15 +77,16 @@
         state: started
       loop: "{{ ec2_info.instances }}"
 
-    # 5 - Add new instances to Ansible runtime inventory
+    # 5 - Add New Instances To Dynamic Inventory
     - name: Add instances to ec2_group
       ansible.builtin.add_host:
         name: "{{ item.public_ip_address }}"
         groups: ec2_group
       loop: "{{ ec2_info.instances }}"
 
+
 ######################################################################
-# SECOND PLAY — SSH INTO EC2 USING mumbai.pem AND COPY JENKINS PUBLIC KEY
+# SECOND PLAY — COPY JENKINS PUBLIC KEY TO EC2-USER
 ######################################################################
 
 - name: Setup SSH keys on EC2 instances
@@ -101,7 +102,7 @@
 
   tasks:
 
-    - name: Ensure .ssh directory exists
+    - name: Ensure .ssh directory exists for ec2-user
       file:
         path: /home/ec2-user/.ssh
         state: directory
@@ -109,7 +110,60 @@
         group: ec2-user
         mode: '0700'
 
-    - name: Add Jenkins public key to authorized_keys
+    - name: Add Jenkins public key to ec2-user authorized_keys
       authorized_key:
         user: ec2-user
         key: "{{ lookup('file', jenkins_pub_key) }}"
+
+
+######################################################################
+# THIRD PLAY — CREATE USER 'jenkins' AND COPY sudoers FILE
+######################################################################
+
+- name: Create Jenkins user & setup SSH + sudo
+  hosts: ec2_group
+  gather_facts: false
+  become: yes
+
+  vars:
+    ansible_user: ec2-user
+    ansible_ssh_private_key_file: "/home/jenkins/.ssh/mumbai.pem"
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+    jenkins_pub_key: "/home/jenkins/.ssh/id_rsa.pub"
+    sudoers_src: "/etc/sudoers.d/jenkins"
+
+  tasks:
+
+    - name: Create jenkins user
+      user:
+        name: jenkins
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Create .ssh folder for jenkins
+      file:
+        path: /home/jenkins/.ssh
+        state: directory
+        owner: jenkins
+        group: jenkins
+        mode: '0700'
+
+    - name: Copy public key to jenkins authorized_keys
+      authorized_key:
+        user: jenkins
+        key: "{{ lookup('file', jenkins_pub_key) }}"
+
+    - name: Copy sudoers file for jenkins
+      copy:
+        src: "{{ sudoers_src }}"
+        dest: "/etc/sudoers.d/jenkins"
+        owner: root
+        group: root
+        mode: '0440'
+
+    - name: Ensure sudoers permissions correct
+      file:
+        path: "/etc/sudoers.d/jenkins"
+        owner: root
+        group: root
+        mode: '0440'
