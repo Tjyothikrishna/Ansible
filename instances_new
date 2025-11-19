@@ -1,0 +1,95 @@
+---
+- name: Create EC2 instances in AWS
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    region: "ap-south-1"
+    vpc_id: "vpc-05a6ec325cfcc6bf2"
+    keypair: "mumbai"
+    instance_type: "t3.micro"
+    ami_id: "ami-03695d52f0d883f65"
+    sg_name: "ansible-sg"
+    instance_count: 3
+    local_pub_key: "/home/jenkins/.ssh/id_rsa.pub"
+    inventory_file: "/home/jenkins/ansi.inv"
+    allowed_ports:
+      - 22
+      - 80
+      - 443
+
+  tasks:
+
+    # 1 - Create Security Group
+    - name: Create a security group
+    - name: Create a security group
+      amazon.aws.ec2_security_group:
+        name: "{{ sg_name }}"
+        description: "Security group for EC2"
+        vpc_id: "{{ vpc_id }}"
+        region: "{{ region }}"
+        rules:
+          - proto: tcp
+            ports: "{{ allowed_ports }}"
+            cidr_ip: 0.0.0.0/0
+      register: sg_info
+
+    - debug:
+        msg: "Created SG ID: {{ sg_info.group_id }}"
+
+    # 2 - Launch EC2 Instances
+    - name: Launch EC2 instances
+      amazon.aws.ec2_instance:
+        name: "ansible-ec2"
+        instance_type: "{{ instance_type }}"
+        key_name: "{{ keypair }}"
+        image_id: "{{ ami_id }}"
+        region: "{{ region }}"
+        security_group: "{{ sg_info.group_id }}"
+        network:
+          assign_public_ip: true
+        count: "{{ instance_count }}"
+        wait: yes
+        wait_timeout: 600
+      register: ec2_info
+
+    - debug:
+        msg: "Instance IDs: {{ ec2_info.instance_ids }}"
+
+    # 3 - Save Private IPs into inventory file
+    - name: Save instances private IPs into inventory file
+      copy:
+        dest: "{{ inventory_file }}"
+        content: |
+          [ec2_nodes]
+          {% for inst in ec2_info.instances %}
+          {{ inst.private_ip_address }}
+          {% endfor %}
+
+    - debug:
+        msg: "Private IPs saved to {{ inventory_file }}"
+
+    # 4 - Wait for SSH to become available
+    - name: Wait for SSH
+      wait_for:
+        host: "{{ item.public_ip_address }}"
+        port: 22
+        timeout: 300
+      loop: "{{ ec2_info.instances }}"
+
+    # 5 - Add public key to each instance for passwordless SSH
+- name: Push Jenkins SSH public key to new instances
+  hosts: ec2_nodes
+  gather_facts: false
+  become: yes
+
+  vars:
+    local_pub_key: "/home/jenkins/.ssh/id_rsa.pub"
+
+  tasks:
+
+    - name: Ensure authorized_keys exists and copy pub key
+      ansible.builtin.authorized_key:
+        user: ec2-user
+        key: "{{ lookup('file', local_pub_key) }}"
