@@ -52,12 +52,11 @@
     - debug:
         msg: "Instance ID: {{ ec2_info.instance_ids[0] }}"
 
-    # 3 - Save Public IP for Jenkins pipeline / email notification
-    - name: Save EC2 public IP
-      local_action:
-        module: copy
+    # 3 - Save Public IP for Jenkins
+    - name: Save EC2 public IP for Jenkins
+      copy:
         content: "{{ ec2_info.instances[0].public_ip_address }}"
-        dest: /tmp/ec2_ip.txt
+        dest: "{{ lookup('env','WORKSPACE') }}/public_ip.txt"
 
     - debug:
         msg: "Public IP: {{ ec2_info.instances[0].public_ip_address }}"
