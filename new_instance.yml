@@ -18,6 +18,7 @@
       - 22
       - 80
       - 443
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
   tasks:
 
@@ -56,8 +57,8 @@
     - debug:
         msg: "Instance IDs: {{ ec2_info.instance_ids }}"
 
-    # 3 - Save Private IPs into file
-    - name: Save instances private IPs into inventory file
+    # 3 - Save Private IPs to file
+    - name: Save private IPs into inventory file
       copy:
         dest: "{{ inventory_file }}"
         content: |
@@ -66,31 +67,40 @@
           {{ inst.private_ip_address }}
           {% endfor %}
 
-    # 4 - Wait SSH
-    - name: Wait for SSH
+    # 4 - Wait until SSH is available
+    - name: Wait for SSH to be ready
       wait_for:
         host: "{{ item.public_ip_address }}"
         port: 22
-        timeout: 300
+        timeout: 400
+        state: started
       loop: "{{ ec2_info.instances }}"
 
-    # 5 - Add SSH public key
-    - name: Add Jenkins public key to new instances
+    # 5 - Dynamically add hosts to a new group
+    - name: Add instances to ec2_group
       ansible.builtin.add_host:
         name: "{{ item.public_ip_address }}"
         groups: ec2_group
       loop: "{{ ec2_info.instances }}"
 
-- name: Push Jenkins SSH public key
+##############################################################
+# SECOND PLAY – actually connect and push the SSH key
+##############################################################
+
+- name: Push Jenkins SSH public key into EC2 instances
   hosts: ec2_group
   gather_facts: false
   become: yes
 
   vars:
+    ansible_user: ec2-user
+    ansible_ssh_private_key_file: "/home/jenkins/.ssh/id_rsa"
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
     local_pub_key: "/home/jenkins/.ssh/id_rsa.pub"
 
   tasks:
-    - name: Add key to authorized_keys
-      ansible.builtin.authorized_key:
+
+    - name: Add Jenkins SSH public key to EC2 authorized_keys
+      authorized_key:
         user: ec2-user
         key: "{{ lookup('file', local_pub_key) }}"
