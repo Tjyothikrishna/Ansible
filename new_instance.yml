@@ -12,8 +12,9 @@
     ami_id: "ami-03695d52f0d883f65"
     sg_name: "ansible-sg"
     instance_count: 3
-    local_pub_key: "/home/jenkins/.ssh/id_rsa.pub"
+    jenkins_pub_key: "/home/jenkins/.ssh/id_rsa.pub"
     inventory_file: "/home/jenkins/ansi.inv"
+    aws_private_key: "/home/jenkins/.ssh/mumbai.pem"
     allowed_ports:
       - 22
       - 80
@@ -57,7 +58,7 @@
     - debug:
         msg: "Instance IDs: {{ ec2_info.instance_ids }}"
 
-    # 3 - Save Private IPs to file
+    # 3 - Save Private IPs into file
     - name: Save private IPs into inventory file
       copy:
         dest: "{{ inventory_file }}"
@@ -76,31 +77,39 @@
         state: started
       loop: "{{ ec2_info.instances }}"
 
-    # 5 - Dynamically add hosts to a new group
+    # 5 - Add new instances to Ansible runtime inventory
     - name: Add instances to ec2_group
       ansible.builtin.add_host:
         name: "{{ item.public_ip_address }}"
         groups: ec2_group
       loop: "{{ ec2_info.instances }}"
 
-##############################################################
-# SECOND PLAY – actually connect and push the SSH key
-##############################################################
+######################################################################
+# SECOND PLAY — SSH INTO EC2 USING mumbai.pem AND COPY JENKINS PUBLIC KEY
+######################################################################
 
-- name: Push Jenkins SSH public key into EC2 instances
+- name: Setup SSH keys on EC2 instances
   hosts: ec2_group
   gather_facts: false
   become: yes
 
   vars:
     ansible_user: ec2-user
-    ansible_ssh_private_key_file: "/home/jenkins/.ssh/id_rsa"
+    ansible_ssh_private_key_file: "/home/jenkins/.ssh/mumbai.pem"
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
-    local_pub_key: "/home/jenkins/.ssh/id_rsa.pub"
+    jenkins_pub_key: "/home/jenkins/.ssh/id_rsa.pub"
 
   tasks:
 
-    - name: Add Jenkins SSH public key to EC2 authorized_keys
+    - name: Ensure .ssh directory exists
+      file:
+        path: /home/ec2-user/.ssh
+        state: directory
+        owner: ec2-user
+        group: ec2-user
+        mode: '0700'
+
+    - name: Add Jenkins public key to authorized_keys
       authorized_key:
         user: ec2-user
-        key: "{{ lookup('file', local_pub_key) }}"
+        key: "{{ lookup('file', jenkins_pub_key) }}"
