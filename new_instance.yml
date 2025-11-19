@@ -23,6 +23,7 @@
 
   tasks:
 
+    # 1 — Create Security Group
     - name: Create a security group
       amazon.aws.ec2_security_group:
         name: "{{ sg_name }}"
@@ -38,6 +39,7 @@
     - debug:
         msg: "Created SG ID: {{ sg_info.group_id }}"
 
+    # 2 — Launch EC2 Instances
     - name: Launch EC2 instances
       amazon.aws.ec2_instance:
         name: "ansible-ec2"
@@ -56,6 +58,7 @@
     - debug:
         msg: "Instance IDs: {{ ec2_info.instance_ids }}"
 
+    # 3 — Save Private IPs into File
     - name: Save private IPs into inventory file
       copy:
         dest: "{{ inventory_file }}"
@@ -65,6 +68,7 @@
           {{ inst.private_ip_address }}
           {% endfor %}
 
+    # 4 — Wait for SSH
     - name: Wait for SSH to be ready
       wait_for:
         host: "{{ item.public_ip_address }}"
@@ -73,6 +77,7 @@
         state: started
       loop: "{{ ec2_info.instances }}"
 
+    # 5 — Add Instances to Dynamic Inventory
     - name: Add instances to ec2_group
       ansible.builtin.add_host:
         name: "{{ item.public_ip_address }}"
@@ -81,7 +86,7 @@
 
 
 ######################################################################
-# SECOND PLAY — COPY JENKINS PUBLIC KEY TO ec2-user
+# SECOND PLAY — ADD JENKINS PUBLIC KEY TO ec2-user
 ######################################################################
 
 - name: Setup SSH keys on EC2 instances
@@ -112,7 +117,7 @@
 
 
 ######################################################################
-# THIRD PLAY — CREATE jenkins USER & COPY SUDOERS FILE
+# THIRD PLAY — CREATE USER jenkins & COPY SUDOERS FILE
 ######################################################################
 
 - name: Create Jenkins user & setup SSH + sudo
@@ -134,7 +139,7 @@
         shell: /bin/bash
         create_home: yes
 
-    - name: Create .ssh folder for jenkins
+    - name: Create .ssh directory for jenkins
       file:
         path: /home/jenkins/.ssh
         state: directory
@@ -142,7 +147,7 @@
         group: jenkins
         mode: '0700'
 
-    - name: Copy public key to jenkins authorized_keys
+    - name: Add Jenkins public key to jenkins authorized_keys
       authorized_key:
         user: jenkins
         key: "{{ lookup('file', jenkins_pub_key) }}"
@@ -155,8 +160,7 @@
         group: root
         mode: '0440'
 
-    - name: Ensure sudoers permission (44
-0)
+    - name: Ensure sudoers permissions
       file:
         path: /etc/sudoers.d/jenkins
         owner: root
