@@ -23,7 +23,7 @@
 
   tasks:
 
-    # 1 — Create Security Group
+    # 1 - Create Security Group
     - name: Create a security group
       amazon.aws.ec2_security_group:
         name: "{{ sg_name }}"
@@ -39,7 +39,7 @@
     - debug:
         msg: "Created SG ID: {{ sg_info.group_id }}"
 
-    # 2 — Launch EC2 Instances
+    # 2 - Launch EC2 Instances
     - name: Launch EC2 instances
       amazon.aws.ec2_instance:
         name: "ansible-ec2"
@@ -58,7 +58,7 @@
     - debug:
         msg: "Instance IDs: {{ ec2_info.instance_ids }}"
 
-    # 3 — Save Private IPs into File
+    # 3 - Save Private IPs into file
     - name: Save private IPs into inventory file
       copy:
         dest: "{{ inventory_file }}"
@@ -68,7 +68,7 @@
           {{ inst.private_ip_address }}
           {% endfor %}
 
-    # 4 — Wait for SSH
+    # 4 - Wait until SSH is available
     - name: Wait for SSH to be ready
       wait_for:
         host: "{{ item.public_ip_address }}"
@@ -77,47 +77,15 @@
         state: started
       loop: "{{ ec2_info.instances }}"
 
-    # 5 — Add Instances to Dynamic Inventory
+    # 5 - Add new instances to Ansible runtime inventory
     - name: Add instances to ec2_group
       ansible.builtin.add_host:
         name: "{{ item.public_ip_address }}"
         groups: ec2_group
       loop: "{{ ec2_info.instances }}"
 
-
 ######################################################################
-# SECOND PLAY — ADD JENKINS PUBLIC KEY TO ec2-user
-######################################################################
-
-- name: Setup SSH keys on EC2 instances
-  hosts: ec2_group
-  gather_facts: false
-  become: yes
-
-  vars:
-    ansible_user: ec2-user
-    ansible_ssh_private_key_file: "/home/jenkins/.ssh/mumbai.pem"
-    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
-    jenkins_pub_key: "/home/jenkins/.ssh/id_rsa.pub"
-
-  tasks:
-
-    - name: Ensure .ssh directory exists for ec2-user
-      file:
-        path: /home/ec2-user/.ssh
-        state: directory
-        owner: ec2-user
-        group: ec2-user
-        mode: '0700'
-
-    - name: Add Jenkins public key to ec2-user authorized_keys
-      authorized_key:
-        user: ec2-user
-        key: "{{ lookup('file', jenkins_pub_key) }}"
-
-
-######################################################################
-# THIRD PLAY — CREATE USER jenkins & COPY SUDOERS FILE
+#  — CREATE JENKINS USER + COPY SUDO FILE
 ######################################################################
 
 - name: Create Jenkins user & setup SSH + sudo
@@ -154,15 +122,8 @@
 
     - name: Copy sudoers file for jenkins user
       copy:
-        src: files/jenkins_sudoers
+        src: ./root_per_all        # <<< UPDATED HERE
         dest: /etc/sudoers.d/jenkins
-        owner: root
-        group: root
-        mode: '0440'
-
-    - name: Ensure sudoers permissions
-      file:
-        path: /etc/sudoers.d/jenkins
         owner: root
         group: root
         mode: '0440'
