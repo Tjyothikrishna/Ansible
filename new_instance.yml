@@ -23,7 +23,6 @@
 
     # 1 - Create Security Group
     - name: Create a security group
-    - name: Create a security group
       amazon.aws.ec2_security_group:
         name: "{{ sg_name }}"
         description: "Security group for EC2"
@@ -57,7 +56,7 @@
     - debug:
         msg: "Instance IDs: {{ ec2_info.instance_ids }}"
 
-    # 3 - Save Private IPs into inventory file
+    # 3 - Save Private IPs into file
     - name: Save instances private IPs into inventory file
       copy:
         dest: "{{ inventory_file }}"
@@ -67,10 +66,7 @@
           {{ inst.private_ip_address }}
           {% endfor %}
 
-    - debug:
-        msg: "Private IPs saved to {{ inventory_file }}"
-
-    # 4 - Wait for SSH to become available
+    # 4 - Wait SSH
     - name: Wait for SSH
       wait_for:
         host: "{{ item.public_ip_address }}"
@@ -78,9 +74,15 @@
         timeout: 300
       loop: "{{ ec2_info.instances }}"
 
-    # 5 - Add public key to each instance for passwordless SSH
-- name: Push Jenkins SSH public key to new instances
-  hosts: ec2_nodes
+    # 5 - Add SSH public key
+    - name: Add Jenkins public key to new instances
+      ansible.builtin.add_host:
+        name: "{{ item.public_ip_address }}"
+        groups: ec2_group
+      loop: "{{ ec2_info.instances }}"
+
+- name: Push Jenkins SSH public key
+  hosts: ec2_group
   gather_facts: false
   become: yes
 
@@ -88,8 +90,7 @@
     local_pub_key: "/home/jenkins/.ssh/id_rsa.pub"
 
   tasks:
-
-    - name: Ensure authorized_keys exists and copy pub key
+    - name: Add key to authorized_keys
       ansible.builtin.authorized_key:
         user: ec2-user
         key: "{{ lookup('file', local_pub_key) }}"
