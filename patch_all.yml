@@ -1,10 +1,89 @@
 ---
+- name: Request approval before patching
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    ses_smtp_host: "ses-smtp-user.20251120-105927"
+    ses_smtp_port: 587
+    ses_username: "AKIA2DTFEFYGSUOI44UO"
+    ses_password: "BKErj1pnweVjPpI41aNutIXs5r6vw0gJwm8zWbRMGWOY"
+    send_to: "jyothikrishnatunga@gmail.com"
+    send_from: "tjyothikrishna@gmail.com"
+
+  tasks:
+
+    - name: Send approval email
+      community.general.mail:
+        host: "{{ ses_smtp_host }}"
+        port: "{{ ses_smtp_port }}"
+        username: "{{ ses_username }}"
+        password: "{{ ses_password }}"
+        to: "{{ send_to }}"
+        subject: "Approval Required: Patch EC2 Instances"
+        body: |
+          Hello,
+
+          A patching operation is waiting for your approval.
+
+          Reply with:
+          YES  → to start patching
+          NO   → to reject
+
+          Regards,
+          Ansible Automation
+        subtype: html
+      delegate_to: localhost
+
+    - name: Wait 5 minutes for approval file
+      pause:
+        minutes: 5
+
+    - name: Read approval response
+      slurp:
+        src: /home/jenkins/approval.txt
+      register: approval_file
+      ignore_errors: yes
+
+    - name: Set approval text
+      set_fact:
+        approval_text: "{{ approval_file['content'] | b64decode | trim }}"
+      when: approval_file is defined and approval_file['content'] is defined
+
+    - name: Fail if not approved
+      fail:
+        msg: "Patching rejected by approver."
+      when: approval_text != "YES"
+
+    - name: Continue if approved
+      debug:
+        msg: "Approval received. Starting patching..."
+
+
+#############################
+# PATCHING STARTS HERE
+#############################
+
 - name: Patch all EC2 instances
   hosts: ec2_nodes
   become: yes
-
   tasks:
+
     - name: Update all packages
       yum:
         name: "*"
         state: latest
+
+    - name: Send success email
+      community.general.mail:
+        host: "{{ hostvars['localhost']['ses_smtp_host'] }}"
+        port: "{{ hostvars['localhost']['ses_smtp_port'] }}"
+        username: "{{ hostvars['localhost']['ses_username'] }}"
+        password: "{{ hostvars['localhost']['ses_password'] }}"
+        to: "{{ hostvars['localhost']['send_to'] }}"
+        subject: "SUCCESS: EC2 Patching Completed"
+        body: "All EC2 instances were patched successfully."
+        subtype: html
+      delegate_to: localhost
+      run_once: true
+
