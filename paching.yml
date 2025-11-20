@@ -1,0 +1,57 @@
+---
+- name: Linux Patching Playbook
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    reboot_required: yes
+
+  pre_tasks:
+    - name: Check OS family
+      debug:
+        msg: "Patching {{ ansible_os_family }} servers"
+
+  tasks:
+
+    - name: Update all packages (RHEL/CentOS/Rocky)
+      yum:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Update all packages (Ubuntu/Debian)
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_os_family == "Debian"
+
+    - name: Check if reboot is required (RHEL)
+      command: needs-restarting -r
+      register: reboot_check
+      failed_when: reboot_check.rc not in [0,1]
+      changed_when: false
+      when: ansible_os_family == "RedHat"
+
+    - name: Set reboot flag
+      set_fact:
+        reboot_required: true
+      when:
+        - ansible_os_family == "RedHat"
+        - reboot_check.rc == 1
+
+    - name: Reboot the server if required
+      reboot:
+        msg: "Reboot initiated by Ansible after patching"
+        pre_reboot_delay: 5
+        post_reboot_delay: 25
+      when: reboot_required
+
+  post_tasks:
+    - name: Verify uptime after reboot
+      command: uptime
+      register: uptime_output
+      changed_when: false
+
+    - debug:
+        var: uptime_output.stdout
