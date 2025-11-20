@@ -1,24 +1,15 @@
 ---
-###############################################################
-# 1) SEND APPROVAL EMAIL USING AMAZON SES
-###############################################################
 - name: Request approval before patching
   hosts: localhost
   gather_facts: no
 
   vars:
-
-    # SES SMTP endpoint for Mumbai region
     ses_smtp_host: "email-smtp.ap-south-1.amazonaws.com"
     ses_smtp_port: 587
-
-    # REPLACE WITH SMTP CREDENTIALS (NOT IAM KEYS)
     ses_username: "AKIA2DTFEFYGSUOI44UO"
     ses_password: "BKErj1pnweVjPpI41aNutIXs5r6vw0gJwm8zWbRMGWOY"
-
-    # VERIFIED EMAILS IN SES
-    send_from: "tjyothikrishna18@gmail.com"       # Verified sender
-    send_to: "jyothikrishnatunga@gmail.com"       # Verified receiver
+    send_from: "tjyothikrishna18@gmail.com"   
+    send_to: "jyothikrishnatunga@gmail.com"       
 
   tasks:
 
@@ -72,21 +63,14 @@
       debug:
         msg: "Approval received. Starting patching..."
 
-
-###############################################################
-# 2) PATCH ALL EC2 INSTANCES AFTER APPROVAL
-###############################################################
 - name: Patch all EC2 instances
   hosts: ec2_nodes
   become: yes
-
   tasks:
-
     - name: Update all packages
       yum:
         name: "*"
         state: latest
-
     - name: Send success email
       community.general.mail:
         host: "{{ hostvars['localhost']['ses_smtp_host'] }}"
@@ -98,7 +82,7 @@
         subject: "SUCCESS: EC2 Patching Completed"
         body: |
           Hello,
-
+          
           All EC2 instances were patched successfully.
 
           Regards,
