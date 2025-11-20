@@ -5,7 +5,7 @@
 
   vars:
     ses_smtp_host: "email-smtp.ap-south-1.amazonaws.com"
-    ses_smtp_port: 587
+    ses_smtp_port: 465
     ses_username: "AKIA2DTFEFYGSUOI44UO"
     ses_password: "BKErj1pnweVjPpI41aNutIXs5r6vw0gJwm8zWbRMGWOY"
     send_to: "jyothikrishnatunga@gmail.com"
