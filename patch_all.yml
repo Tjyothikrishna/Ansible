@@ -12,7 +12,6 @@
     send_from: "tjyothikrishna@gmail.com"
 
   tasks:
-
     - name: Send approval email
       community.general.mail:
         host: "{{ ses_smtp_host }}"
@@ -20,6 +19,7 @@
         username: "{{ ses_username }}"
         password: "{{ ses_password }}"
         to: "{{ send_to }}"
+        from: "{{ send_from }}"     # <-- REQUIRED
         subject: "Approval Required: Patch EC2 Instances"
         body: |
           Hello,
@@ -34,6 +34,7 @@
           Ansible Automation
         subtype: html
       delegate_to: localhost
+
 
     - name: Wait 5 minutes for approval file
       pause:
