@@ -62,24 +62,23 @@
     - debug:
         msg: "Instance IDs: {{ ec2_info.instance_ids }}"
 
-    ###################################################################
-    # 3 - WRITE INVENTORY (KEEP OLD + ADD NEW IPs)
-    ###################################################################
+###################################################################
+# 3 - WRITE INVENTORY (APPEND NEW IPs ONLY)
+###################################################################
 
-    - name: Ensure inventory group header exists
-      lineinfile:
-        path: "{{ inventory_file }}"
-        line: "[ec2_nodes]"
-        create: yes
-        insertafter: BOF
+- name: Ensure inventory group header exists
+  lineinfile:
+    path: "{{ inventory_file }}"
+    line: "[ec2_nodes]"
+    create: yes
+    insertafter: BOF
 
-    - name: Add new EC2 private IPs without removing old ones
-      blockinfile:
-        path: "{{ inventory_file }}"
-        marker: "# {mark} EC2 BLOCK {{ item.instance_id }}"
-        block: |
-          {{ item.private_ip_address }}
-      loop: "{{ ec2_info.instances }}"
+- name: Add new EC2 private IPs (no blocks, no overwrite)
+  lineinfile:
+    path: "{{ inventory_file }}"
+    line: "{{ item.private_ip_address }}"
+    insertafter: EOF
+  loop: "{{ ec2_info.instances }}"
 
     ###################################################################
     # 4 - Wait for SSH
