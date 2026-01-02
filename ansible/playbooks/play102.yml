@@ -1,0 +1,16 @@
+---
+- name: play to Demonstrate when condition
+  hosts: localhost
+  vars:
+    #allow: true
+    allow: false
+  tasks:
+  - name: Task to demonstrate when condition with allow true
+    ansible.builtin.debug:
+      msg: "This task is allowed"
+    when: allow == true
+  - name: Task to demonstrate when condition with allow false
+    ansible.builtin.debug:
+      msg: "This task is not allowed"
+    when: allow == false
+...

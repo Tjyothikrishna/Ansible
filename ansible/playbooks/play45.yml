@@ -1,0 +1,16 @@
+#9.Define a variable in group_vars/all.yml for a service name (firewalld) and 
+#use it in a playbook to ensure the service is enabled and started
+---
+- name: enabled and startedthe package using a variable
+  hosts: localhost
+  become: true
+  gather_facts: no
+  vars_files:
+  - group_vars/all.yml
+  tasks:
+    - name: enabled and started package from variable
+      ansible.builtin.service:
+       name: "{{ pack }}"
+       state: started
+       enabled: yes  
+...

@@ -1,0 +1,16 @@
+---
+- name: Demonstrate  ansible variables
+  hosts: localhost
+  vars:
+   color: red
+  tasks:
+  - name: print the value of variables defined above
+    ansible.builtin.debug:
+      #msg: "The value is :{{ color }}" #This Works
+      #msg: The value is :{{ color }} #This does not work
+      #msg: "{{ color }}" # This works
+      #msg: {{ color }}  # This not works
+      #msg: {{ color }} is bright #This not works
+      msg: And the {{ color }} is bright
+#Note this msg without double quote works for variable if there is text before and after the variable .Else wont!!
+...

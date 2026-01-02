@@ -1,0 +1,29 @@
+---
+- name: Play to create multiple users with loop control structure
+  hosts: localhost
+  become: True
+  remote_user: ansible
+  vars:
+    students:
+      - name: lido
+        gecos: "lido user"
+      - name: larry
+        gecos: "larry admin"
+      - name: curly
+        gecos: "curly java Developer"
+      - name: sandhill
+        gecos: "sandy developer"
+      - name: bigbro
+        gecos: "big brother"
+      - name: littlej
+        gecos: "littlej bro"
+    default_pass: alclabs
+  tasks:
+    - name: Create users with loop
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        comment: "{{ item.gecos }}"
+        password: "{{ default_pass | password_hash('sha512') }}"
+        state: present
+      loop: "{{ students }}"
+...

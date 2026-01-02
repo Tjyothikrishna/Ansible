@@ -1,0 +1,9 @@
+---
+- name: Demonstrate debug module.
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Task to print the text using debug module.
+    ansible.builtin.debug:
+      msg: "Helo World"
+...

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient</title>
+    <link rel="stylesheet" href="add.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <img src="logo.png" alt="Wi-Fi Healthcare Logo"> 
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="homepage.html">Home</a></li>
+                    <li><a href="homepage.html#about">About</a></li>
+                    <li><a href="homepage.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="container">
+        <h2>Add New Patient</h2>
+        <div class="input-group">
+            <label for="enterID">Patient ID:</label>
+            <input type="text" id="enterID" placeholder="Enter Patient ID">
+        </div>
+        <div class="input-group">
+            <label for="enterName">Name:</label>
+            <input type="text" id="enterName" placeholder="Enter Full Name">
+        </div>
+        <div class="input-group">
+            <label for="enterAge">Age:</label>
+            <input type="number" id="enterAge" placeholder="Enter Age">
+        </div>
+        <div class="input-group">
+            <label for="enterDOB">Date of Birth:</label>
+            <input type="date" id="enterDOB">
+        </div>
+        <div class="input-group">
+            <label for="enterBloodGroup">Blood Group:</label>
+            <input type="text" id="enterBloodGroup" placeholder="Enter Blood Group">
+        </div>
+        <button id="addPatient">Add Patient</button>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Wi-Fi Healthcare. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBz7C87VuLddHDS-LNHnScxTFhbXUqs1J4",
+            authDomain: "kssem-wifihealthcare.firebaseapp.com",
+            databaseURL: "https://kssem-wifihealthcare-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "kssem-wifihealthcare",
+            storageBucket: "kssem-wifihealthcare.firebasestorage.app",
+            messagingSenderId: "904758117254",
+            appId: "1:904758117254:web:74184c02b1ea84c291e207"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.querySelector("#addPatient").addEventListener('click', () => {
+            const enterID = document.querySelector("#enterID").value.trim();
+            const enterName = document.querySelector("#enterName").value.trim();
+            const enterAge = document.querySelector("#enterAge").value.trim();
+            const enterDOB = document.querySelector("#enterDOB").value;
+            const enterBloodGroup = document.querySelector("#enterBloodGroup").value.trim().toUpperCase();
+
+            if (!enterID || !enterName || !enterAge || !enterDOB || !enterBloodGroup) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            set(ref(db, `Patients/${enterID}`), {
+                Name: enterName,
+                Age: enterAge,
+                DOB: enterDOB,
+                BloodGroup: enterBloodGroup
+            }).then(() => {
+                alert("Patient added successfully!");
+                document.querySelector("#enterID").value = "";
+                document.querySelector("#enterName").value = "";
+                document.querySelector("#enterAge").value = "";
+                document.querySelector("#enterDOB").value = "";
+                document.querySelector("#enterBloodGroup").value = "";
+            }).catch(console.error);
+        });
+    </script>
+</body>
+</html>

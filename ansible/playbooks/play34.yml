@@ -1,0 +1,15 @@
+---
+- name: Demonstrate command module and capture it output and then print
+  hosts: localhost
+  gather_facts: no
+  become: True
+  tasks:
+  - name: Execute uptime command
+    ansible.builtin.command:
+      #cmd: /usr/bin/uptime
+      cmd: vgs
+    register: myvars
+  - name: print value of the register variable
+    ansible.builtin.debug:
+      msg: "{{ myvars }}"
+...

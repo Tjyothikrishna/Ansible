@@ -1,0 +1,15 @@
+#8.Write a playbook where you define a variable for a package name (nginx) and 
+#use it inside the yum module to install the package.
+---
+- name: Install the package using a variable
+  hosts: localhost
+  become: true
+  gather_facts: no
+  vars: 
+    pack: nginx
+  tasks:
+    - name: Install package from variable
+      ansible.builtin.yum:
+        name: "{{ pack }}"
+        state: latest
+...

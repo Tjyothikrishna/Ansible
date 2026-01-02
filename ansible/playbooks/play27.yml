@@ -1,0 +1,20 @@
+---
+- name: Demonstrate  prompt variables
+  hosts: localhost
+  vars_prompt:
+   - name: db_name
+     prompt: "Enter Database name "
+     private: no
+   - name: db_passwd
+     prompt: "Enter Database passwd "
+     private: yes
+   - name: db_host
+     prompt: "Enter host name "
+     private: no
+     default: jk.alclabs.in
+  gather_facts: no
+  tasks: 
+  - name: print variable value
+    ansible.builtin.debug:
+      msg: "You entered values are Database name is {{ db_name }} and its Password is {{ db_passwd }} and belongs {{ db_host }}"
+...

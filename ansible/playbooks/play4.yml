@@ -1,0 +1,14 @@
+---
+- name: This is able to creater a file
+  hosts: localhost
+  become: true
+  tasks:
+   - name: creater an empty file
+     ansible.builtin.file:
+       path: /home/ansible/new_ansi_dir
+       state: absent
+       #state: touch
+       owner: root
+       group: ansible
+       mode: '0640'
+...

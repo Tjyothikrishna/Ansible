@@ -1,0 +1,15 @@
+---
+- name: Demonstrate debug var
+  hosts: localhost
+  gather_facts: no
+  become: True
+  tasks:
+  - name: command module example
+    ansible.builtin.command: ls
+    register: out
+  - name: work with debug
+    ansible.builtin.debug:
+      #var: out
+      #var: out.stdout_lines
+      var: out['stdout_lines']
+...

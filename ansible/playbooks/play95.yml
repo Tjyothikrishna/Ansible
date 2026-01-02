@@ -1,0 +1,16 @@
+#Demonstrate ansible plug-in loops
+---
+- name: play to Demonstrate ansible plug-in loops
+  hosts: localhost
+  become: yes
+  gather_facts: no
+  vars:
+    f_content: "{{ lookup('file', '/etc/passwd') }}" #you are doing lookup for /etc/passwd which is of type file
+                                                     #the content of /etc/passwd is stored in f_content variable
+                                                     #note that this is definedmin vars section and not in tasks
+                                                     #become lookup is not a module attribute but a plug-in
+  tasks:
+    - name: Task to print f_content variable with contains the file contents
+      ansible.builtin.debug:
+        msg: "{{ f_content }}"
+...

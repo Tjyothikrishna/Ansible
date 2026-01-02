@@ -1,0 +1,15 @@
+---
+- name: Demonstrate lininfile - example2
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Create a file and add the line 
+    ansible.builtin.lineinfile:
+      path: /home/ansible/statement.txt
+      line: "This line is writen by using Ansible code name play11.yml "
+      state: present
+      create: true
+      owner: ansible
+      group: ansible
+      mode: '0644'
+...

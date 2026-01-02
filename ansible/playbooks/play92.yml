@@ -1,0 +1,10 @@
+---
+- name: print all the hosts in the inventory
+  hosts: all
+  gather_facts: no
+  tasks:
+  - name: used reserved variables groups to print all the service in the inventory
+    ansible.builtin.debug:
+        msg: "{{ item }}"
+    with_items: "{{ groups['all'] }}"
+...

@@ -1,0 +1,28 @@
+---
+- name: play to read a csv file
+  hosts: localhost
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Task to read a csv file {comma separated values} file using read_csv module
+      community.general.read_csv:
+        path: /home/ansible/playbooks/users.csv
+      register: res
+    - name: Task to print registered variables
+      ansible.builtin.debug:
+        var: res.list
+    - name: Create groups given in csv file
+      ansible.builtin.group:
+        name: "{{ item.groups }}"
+        state: present
+      loop: "{{ res.list }}"
+    - name: Create users given in csv file
+      ansible.builtin.user:
+        name: "{{ item.uname }}"
+        groups: "{{ item.groups }}"
+        comment: "{{ item.first_name }} {{ item.last_name }}"
+        uid: "{{ item.uid }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        update_password: on_create
+      loop: "{{ res.list }}"
+...

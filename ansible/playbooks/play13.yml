@@ -1,0 +1,15 @@
+---
+- name: Demonstrate lininfile - example4
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Create a file and add the line 
+    ansible.builtin.lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: ^PermitRootLogin
+      line: "PermitRootLogin = no"
+  - name: Restart the sshd service
+    ansible.builtin.service:
+      name: sshd
+      state: restarted
+...

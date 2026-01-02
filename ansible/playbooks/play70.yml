@@ -1,0 +1,13 @@
+---
+- name: Call the script from shell module
+  hosts: [192.168.1.41,192.168.1.55,192.168.1.42,192.168.1.39]
+  gather_facts: no
+  become: yes
+  tasks:
+  - name: Shell module to executea on a remote server
+    ansible.builtin.script: /home/ansible/playbooks/jkscript.sh
+...
+# Pleace note that the script module copies a local script file from control node
+# to remote host,then execute it (using shell on remote)
+# this is useful when you already have existing script to run on target server (managed nodes)
+# Go through ansible-doc for more information on script module.

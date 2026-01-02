@@ -1,0 +1,25 @@
+---
+- name: play to read a csv file
+  hosts: localhost
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Task to read a csv file {comma separated values} file using read_csv module
+      community.general.read_csv:
+        path: /home/ansible/playbooks/users.csv
+      register: res
+    - name: Task to print registered variables
+      ansible.builtin.debug:
+        var: res.list
+    - name: deletegroups given in csv file
+      ansible.builtin.group:
+        name: "{{ item.groups }}"
+        state: absent
+      loop: "{{ res.list }}"
+    - name: delete users given in csv file
+      ansible.builtin.user:
+        name: "{{ item.uname }}"
+        state: absent
+        remove: yes
+      loop: "{{ res.list }}"
+...

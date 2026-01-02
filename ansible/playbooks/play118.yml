@@ -1,0 +1,40 @@
+#Ansible hsa special tags
+#(1) always
+#(2) never
+#(3) all 
+#
+#
+#
+---
+- name: Demonstrate ansible tags 
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Task1
+    ansible.builtin.debug:
+      msg: "Task 1 - Red planet"
+    tags: mars
+  - name: Task2
+    ansible.builtin.debug:
+      msg: "Task 2 - Venus planet"
+    tags: mint
+  - name: Task3
+    ansible.builtin.debug:
+      msg: "Task 3 - Jupiter planet"
+    tags: mosaic
+  - name: Task4
+    ansible.builtin.debug:
+      msg: "Task 4 - Earth planet"
+    tags: 
+    - blue 
+    - green
+  - name: Task5
+    ansible.builtin.debug:
+      msg: "Task 5 - i am in always tag"
+    tags: always
+  - name: Task6
+    ansible.builtin.debug:
+      msg: "Task 6 - i am in never tag"
+    tags: never
+...
+# Always tags causes the task to always be executed, even if you did not specifiy it --tags option

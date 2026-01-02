@@ -1,0 +1,11 @@
+---
+- name: Demonstrate lininfile - example5 - insert line before the pattern match
+  hosts: localhost
+  become: true
+  tasks:
+  - name: insert line before the line
+    ansible.builtin.lineinfile:
+      path: /home/ansible/playbooks/vars/ashish.txt
+      line: "Amrutha is here"
+      insertbefore: ^Ashish
+...

@@ -1,0 +1,8 @@
+---
+- name: Demonstrate magic variable
+  hosts: localhost
+  tasks:
+  - name: print magic variable
+    debug:
+      var: hostvars
+...

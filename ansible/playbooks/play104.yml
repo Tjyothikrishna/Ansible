@@ -1,0 +1,20 @@
+---
+- name: play to Demonstrate stat module
+  hosts: localhost
+  become: true
+  vars:
+   f_name: /etc/passwd
+  tasks:
+  - name: Check if file exists
+    ansible.builtin.stat:
+      path: "{{ f_name }}"
+    register: out
+  - name: Display file existence
+    ansible.builtin.debug:
+      msg: "File {{ f_name }} exists"
+    when: out.stat.exists == true
+  - name: Display file absence
+    ansible.builtin.debug:
+      msg: "File {{ f_name }} does not exist"
+    when: out.stat.exists == false
+...

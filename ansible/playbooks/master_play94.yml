@@ -1,0 +1,41 @@
+---
+- name: Create list of users based on thier job role
+#We assume there are two roles a) Devops b)Developer
+#All the users created part of Devops job role must have secondary group as devops
+#All the users created part of Deveoper job role must have secondary group as dev
+#Read password from a file (encrypt using password vault)
+#Read users from vars/myorg_users.yml
+  hosts: localhost
+  become: true
+  remote_user: ansible
+  vars_files:
+   - vars/myorg_users.yml
+   - vars/org_userpass.yml
+  gather_facts: false
+  tasks:
+  - name: Create dev and devops groups
+    group: #group module to create group
+     name: "{{item}}"
+    loop:
+     - "dev"
+     - "devops"
+
+  - name: create user when job is developer from myorg_users.yml file with passwird org_userpass.yml vault file
+    user:
+     name: "{{item.name}}"
+     password: "{{user_password | password_hash('sha512')}}"
+     update_password: on_create
+     groups: "dev"
+     append: yes
+    loop: "{{users}}"
+    when: "item['job'] == 'developer'"
+  - name: create user when job is devops from myorg_users.yml file with passwird org_userpass.yml vault file
+    user:
+     name: "{{item.name}}"
+     password: "{{user_password | password_hash('sha512')}}"
+     update_password: on_create
+     groups: "devops"
+     append: yes
+    loop: "{{users}}"
+    when: "item['job'] == 'devops'"
+...

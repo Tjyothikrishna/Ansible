@@ -1,0 +1,16 @@
+---
+- name: play to work with lineinfile module.
+# This is used to search for pattern, insert or replace a line based on the pattern search
+#This play search for pattern SELINUX in /etc/selinux/config file, and replace the same with SELINUX=disable
+  hosts: localhost
+  become: true
+  remote_user: ansible
+  become_user: root
+  tasks:
+  - name: Task to edit /etc/selinux/config file to disable SELINUX
+    ansible.builtin.lineinfile:
+      path: /etc/selinux/config 
+      regexp: ^SELINUX=
+      line: "SELINUX=disabled"
+      # The above will search for pattern  SELINUX= as beginning of the line, and replace with value given with line: attribute
+...

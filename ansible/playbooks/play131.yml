@@ -1,0 +1,10 @@
+---
+- name: play to demonstrate jinja2 template 
+  hosts: all
+  become: true
+  tasks:
+    - name: User template to generate /etc/motd
+      template:
+        src: motd.j2
+        dest: /etc/motd
+...

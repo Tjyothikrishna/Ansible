@@ -1,0 +1,14 @@
+---
+- name: loop with with_items. this is older syntax but still valid 
+  hosts: localhost
+  become: yes
+  tasks:
+  - name: create directories
+    file:
+      path: "{{ item }}"
+      state: directory
+    with_items:
+      - /opt/app1
+      - /opt/app2
+      - /opt/app3
+...

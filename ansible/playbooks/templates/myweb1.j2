@@ -1,0 +1,19 @@
+Listen {{ pot }}
+
+<VirtualHost *:{{ pot }}>
+    # Server settings
+    ServerAdmin "myweb@jk.alclabs.in"
+    DocumentRoot {{ doc_root }}
+    ServerName {{ web_ser }}
+
+    # Directory settings
+    <Directory "{{ doc_root }}">
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    # Log Files
+    ErrorLog /var/log/httpd/{{ err_log_file }}
+    CustomLog /var/log/httpd/{{ acc_log_file }} combined
+</VirtualHost>

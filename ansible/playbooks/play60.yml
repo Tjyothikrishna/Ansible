@@ -1,0 +1,14 @@
+---
+- name: Playbook to download file from the given URL using get_url module
+  hosts: localhost
+  become: yes
+  remote_user: ansible
+  become_user: root
+  gather_facts: false
+  tasks:
+    - name: Download the index.html file from online without checking the certificate
+      ansible.builtin.get_url:
+        url: https://vcenter.alclabs.in/index.html
+        dest: /var/tmp
+        validate_certs: no
+...

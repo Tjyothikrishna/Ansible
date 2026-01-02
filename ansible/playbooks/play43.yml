@@ -1,0 +1,14 @@
+#7.Create a host variable file (host_vars/hostname.yml) to define the ansible_user and ansible_password.
+# Write a playbook to display these variables using debug.
+---
+- name: display these variables using debug.
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+  - host_vars/hostname.yml
+  tasks:
+    - name: Print user variable
+      debug:
+        msg: "hostname is {{  ansible_user }}, password is {{ ansible_password }}"
+...
+

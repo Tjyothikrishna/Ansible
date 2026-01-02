@@ -1,0 +1,14 @@
+---
+- name: copy multiple files with a loop
+  hosts: web
+  become: yes
+  tasks:
+  - name: copy files
+    copy:
+      src: "{{ item.orig }}"
+      dest: "{{ item.destn }}"
+    loop:
+    - { orig: /etc/httpd/conf/httpd.conf, destn: /var/tmp/httpd.conf }
+    - { orig: /etc/hosts, destn: /var/tmp/hosts }
+    - { orig: /var/www/html/index.html, destn: /var/tmp/index.html }
+...

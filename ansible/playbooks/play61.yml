@@ -1,0 +1,14 @@
+---
+- name: Demonstrate archive module
+  hosts: web
+  become: yes
+  tasks:
+    - name: Archive remote server /etc directory
+      community.general.archive:
+        path: /etc
+        dest: /tmp/etc_archive.tar.gz
+        format: gz
+        owner: ansible
+        group: ansible
+        mode: "0600"
+...

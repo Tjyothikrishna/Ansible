@@ -1,0 +1,39 @@
+---
+- name: Play to configure httpd website on given list of hosts
+  hosts: [192.168.1.41, 192.168.1.42]
+  #The above line tells that you have multiple hosts and you defined it is comma seperated values with sequare brackets
+  # This is also called list .you can anotherway to define a list as below
+  # hosts:
+  # - 192.168.1.41
+  # - 192.168.1.42 
+  #you can use either way while you define the line
+  become: yes
+  remote_user: ansible 
+  tasks:
+  - name: Install http web servers and firewalld
+    ansible.builtin.yum:
+      name:
+        - httpd
+        - firewalld
+      state: latest
+  - name: Task to start web server
+    ansible.builtin.service:
+      name: httpd
+      state: started
+      enabled: yes
+  - name: Task to start firewalld server
+    ansible.builtin.service:
+      name: firewalld
+      state: started
+      enabled: yes 
+  - name: Task to add http port to firewall permanently as well as immediately
+    ansible.posix.firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+      immediate: yes
+  - name: Task to add line in /var/www/html/index.html, create the file if it does not exists
+    ansible.builtin.lineinfile:
+      line: "<html><h1><center>This page being served from {{ ansible_facts['hostname'] }}<br>Your IP is {{ ansible_facts['default_ipv4']['address'] }}</center></h1></html>"
+      dest: /var/www/html/index.html
+...

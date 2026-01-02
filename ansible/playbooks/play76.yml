@@ -1,0 +1,16 @@
+---
+- name: play to Demonstrate task variable
+  hosts: localhost
+  vars:
+    color: red
+  tasks:
+  - name: Task to print the  variable
+    debug:
+      msg: "The color is {{ color }}"
+  - name: Task to print the variable
+    vars:
+      color: blue #This variable is defined in the task. so its scope is only limited to scope
+                  #This variable override the play variable
+    ansible.builtin.debug:
+      msg: "The color is {{ color }}"
+...

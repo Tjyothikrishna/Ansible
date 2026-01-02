@@ -1,0 +1,29 @@
+---
+- name: play to check to install kernel, if it doesnt exits dowload
+  hosts: localhost
+  become: true
+  vars: 
+    pack_name: /home/ansible/playbooks/kernel-5.14.0-503.11.1.el9_5.x86_64.rpm
+  tasks:
+  - name: Check the package exists
+    ansible.builtin.stat:
+      path: /home/ansible/playbooks/kernel-5.14.0-503.11.1.el9_5.x86_64.rpm
+    register: result
+
+  - name: Dowload the package if it doesnt exits
+    ansible.builtin.get_url:
+      url: http://192.168.1.131:81/BaseOS/Packages/kernel-5.14.0-503.11.1.el9_5.x86_64.rpm
+      dest: /home/ansible/playbooks/kernel-5.14.0-503.11.1.el9_5.x86_64.rpm
+    when: not result.stat.exists
+
+  - name: Check the package exists
+    ansible.builtin.stat:
+      path: /home/ansible/playbooks/kernel-5.14.0-503.11.1.el9_5.x86_64.rpm
+    register: result
+
+  - name: Install the kernel package
+    ansible.builtin.yum:
+      name: "{{ pack_name }}"
+      state: installed
+    when: result.stat.exists
+...

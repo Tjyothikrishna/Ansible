@@ -1,0 +1,18 @@
+#playbook to Demonstrate loop - with_line
+---
+- name: playbook to Demonstrate loop - with_line
+  hosts: localhost
+  become: yes
+  tasks:
+  - name: Execute command
+    ansible.builtin.command: cat /proc/mounts
+    register: out
+  - name: print out
+    ansible.builtin.debug:
+      msg: "{{ out.stdout_lines }}"
+  - name: print the line from mounts
+    ansible.builtin.debug:
+      msg: "{{ item }}"
+    with_lines: cat /proc/mounts
+...
+#with_lines loops over output of a shell/command

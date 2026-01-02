@@ -1,0 +1,16 @@
+---
+- name: Install package and start the service using include_vars and include_tasks
+#This increase the play modularity. Task defined outside the play can be referenced or called by main play
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Include variables
+    ansible.builtin.include_vars: vars/pack.yml
+  - name: Include tasks to install package
+    ansible.builtin.include_tasks: tasks/install_package2.yml
+  - name: print it
+    ansible.builtin.debug:
+      var: out
+  - name: Include tasks to start the service
+    ansible.builtin.include_tasks: tasks/start_service.yml
+...

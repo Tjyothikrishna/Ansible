@@ -1,0 +1,13 @@
+---
+- name: play to demonstrate loop control structure in ansible
+  hosts: localhost
+  vars:
+    usr:
+    - jk
+    - karthik
+  tasks:
+  - name: Demonstrate loop with variable
+    ansible.builtin.debug:
+      msg: "my self jk --> {{ item }}"
+    loop: "{{ usr }}"
+...

@@ -1,0 +1,7 @@
+pot: 99
+web_ser: jk.alclabs.in
+err_log_file: myweb.err.log
+acc_log_file: myweb.access.log
+doc_root: /myweb
+ser_admin: myweebadm@alclabs.in
+pkg_name: httpd

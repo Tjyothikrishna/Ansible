@@ -1,0 +1,11 @@
+---
+- name: Demonstrate lininfile - example6 - insert line after the pattern match
+  hosts: localhost
+  become: true
+  tasks:
+  - name: insert line after the line
+    ansible.builtin.lineinfile:
+      path: /home/ansible/playbooks/vars/ashish.txt
+      line: "Amrutha is here"
+      insertafter: ^Ashish
+...

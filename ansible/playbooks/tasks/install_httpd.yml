@@ -1,0 +1,5 @@
+- name: Install web server package
+  yum:
+    name: httpd
+    state: present
+  notify: web_start

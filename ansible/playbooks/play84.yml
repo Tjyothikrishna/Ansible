@@ -1,0 +1,16 @@
+---
+- name: Demonstrate loop with_fileglob. This loops through files matching a glob pattern
+  hosts: localhost
+  become: true
+  tasks:
+  - name: create a directory
+    file:
+      path: /backup_playbooks
+      state: directory
+  - name: copy multiple yaml files
+    copy:
+      src: "{{ item }}"
+      dest: /backup_playbooks
+    with_fileglob:
+      - "/home/ansible/playbooks/*.yml"
+...

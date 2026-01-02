@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Details</title>
+  <link rel="stylesheet" href="patient.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+     const canvas = document.getElementById('waveCanvas');
+     const ctx = canvas.getContext('2d');
+   
+     let lines = [];
+     const lineCount = 4;
+     const waveHeight = 50;
+     const waveWidth = 1000;
+     const speed = 0.005;
+     let animationProgress = 1;
+   
+     for (let i = 0; i < lineCount; i++) {
+       lines.push({
+         frequency: 0.015 + i * 0.005,
+         amplitude: waveHeight - i * 2.5,
+         phase: i * Math.PI / 200,
+         verticalOffset: i * 70
+       });
+     }
+   
+     function animate() {
+       ctx.clearRect(0, 0, canvas.width, canvas.height);
+       animationProgress += speed;
+   
+       lines.forEach((line, index) => {
+         ctx.beginPath();
+         ctx.lineWidth = 1.5;
+         ctx.setLineDash(animationProgress < 1 ? [8, 4] : []);
+         ctx.strokeStyle = `rgba(0, 191, 255, ${0.7 - index * 0.03})`;
+   
+   
+         for (let x = 0; x <= waveWidth; x += 2) {
+           const yOffset = line.verticalOffset * (x / waveWidth);
+           const y = canvas.height / 2 + yOffset + Math.sin(x * line.frequency + animationProgress + line.phase) * line.amplitude;
+           x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+         }
+   
+         ctx.stroke();
+   
+         const dotX = waveWidth * ((animationProgress + line.phase) % 1);
+         const yOffset = line.verticalOffset * (dotX / waveWidth);
+         const dotY = canvas.height / 2 + yOffset + Math.sin(dotX * line.frequency + animationProgress + line.phase) * line.amplitude;
+   
+         ctx.beginPath();
+         ctx.arc(dotX, dotY, 5, 0, Math.PI * 2);
+         ctx.fillStyle = `rgba(255, 0, 0, 1)`;
+         ctx.fill();
+       });
+   
+       requestAnimationFrame(animate);
+     }
+   
+     animate();
+   });
+   
+   </script>   
+  
+</head>
+
+<body>
+  <canvas id="waveCanvas" width="800" height="300"></canvas>
+  <div class="container">
+    <div class="patient-details">
+      <h1>Patient Details</h1>
+      <p id="patientName">Name: Loading...</p>
+      <p id="patientAge">Age: Loading...</p>
+      <p id="patientDOB">Date of Birth: Loading...</p>
+      <p id="patientBloodGroup">Blood Group: Loading...</p>
+      <p id="noData" style="color: red; display: none;">No patient found.</p>
+    </div>
+    <div class="buttons">
+      <a href="homepage.html">Home</a>
+    </div>
+  </div>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Temperature(°C)</th>
+        <th>HeartBeat(BPM)</th>
+        <th>Oxygen(SPO2)</th>
+      </tr>
+    </thead>
+    <tbody id="sensorDataBody">
+      <tr>
+        <td colspan="5">Loading sensor data...</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBz7C87VuLddHDS-LNHnScxTFhbXUqs1J4",
+      authDomain: "kssem-wifihealthcare.firebaseapp.com",
+      databaseURL: "https://kssem-wifihealthcare-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "kssem-wifihealthcare",
+      storageBucket: "kssem-wifihealthcare.firebasestorage.app",
+      messagingSenderId: "904758117254",
+      appId: "1:904758117254:web:74184c02b1ea84c291e207"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    function getPatientIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    async function fetchPatientDetails() {
+      const patientId = getPatientIdFromURL();
+      if (!patientId) {
+        document.getElementById('noData').style.display = 'block';
+        return;
+      }
+
+      const patientRef = ref(db);
+      try {
+        const snapshot = await get(child(patientRef, `Patients/${patientId}`));
+        if (snapshot.exists()) {
+          const patientData = snapshot.val();
+          document.getElementById('patientName').innerText = `Name: ${patientData.Name}`;
+          document.getElementById('patientAge').innerText = `Age: ${patientData.Age}`;
+          document.getElementById('patientDOB').innerText = `Date of Birth: ${patientData.DOB}`;
+          document.getElementById('patientBloodGroup').innerText = `Blood Group: ${patientData.BloodGroup}`;
+
+          // Load sensor data if available
+          const sensorDataBody = document.getElementById('sensorDataBody');
+          sensorDataBody.innerHTML = ""; // Clear previous data
+
+          if (patientData.SensorData) {
+            Object.values(patientData.SensorData).forEach(sensorEntry => {
+              const row = `
+                <tr>
+                  <td>${sensorEntry.date || "N/A"}</td>
+                  <td>${sensorEntry.time || "N/A"}</td>
+                  <td>${sensorEntry.temperature || "N/A"}</td>
+                  <td>${sensorEntry.HeartBeat || "N/A"}</td>
+                  <td>${sensorEntry.SPO2 || "N/A"}</td> 
+                </tr>
+              `;
+              sensorDataBody.innerHTML += row;
+            });
+          } else {
+            sensorDataBody.innerHTML = `<tr><td colspan="5">No sensor data found</td></tr>`;
+          }
+        } else {
+          document.getElementById('noData').style.display = 'block';
+        }
+      } catch (error) {
+        console.error("Error fetching patient data:", error);
+      }
+    }
+
+    fetchPatientDetails();
+  </script>
+
+</body>
+</html>

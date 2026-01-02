@@ -1,0 +1,13 @@
+---
+- name:  jinja2 Demo - using for loop in jinja2 template
+  hosts: localhost
+  become: true
+  gather_facts: false
+  vars_files:
+    - user_list.yml
+  tasks:
+    - name: Task the userlist in to a text file
+      template:
+        src: user.j2
+        dest: files/user_list.txt
+...
