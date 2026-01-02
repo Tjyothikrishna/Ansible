@@ -1,0 +1,5 @@
+- name: Add port to firewall
+  ansible.posix.firewalld:
+   port: 8081/tcp
+   permanent: true
+   state: enabled

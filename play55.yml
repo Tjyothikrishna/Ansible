@@ -1,0 +1,12 @@
+---
+- name:  play to print ansible_hostname
+  hosts: [sowjanya.alclabs.in,reddamma.alclabs.in]
+  tasks:
+  - name: Show hostname
+    debug:
+     msg: "The name of the server {{inventory_hostname}} {{inventory_hostname_short}} "
+...
+#Magic variables: inventory_hostname and inventoroy_hostname_short
+#The inventory_hostname prints the hostname of the current host defined in the inventory file
+#The inventory_hostname_short  provide the short from of the hostname(before the first dot)
+

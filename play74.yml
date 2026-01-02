@@ -1,0 +1,28 @@
+---
+- name: play to read a CSV file
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Task to read a CSV (command separated values) file. We use read_csv module.
+    read_csv:
+     path: /home/ansible/playbooks/user_list.csv
+    register: res
+  - name: Task to print registered variable res
+    debug:
+     var: res.list
+  - name: Crate groups given in csv file
+    group:
+     name: "{{item.groups}}"
+     state: present
+    loop: "{{res.list}}"
+  - name: Create users from given in the csv file
+    user:
+     name: "{{item.uname}}"
+     groups: "{{item.groups}}"
+     comment: "{{item.first_name}}_{{item.last_name}}"
+     uid: "{{item.uid}}"
+     password: "{{item.password}}|password_hash('sha512')}}"
+     update_password: on_create
+     append: yes
+    loop: "{{res.list}}" 
+...

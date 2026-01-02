@@ -1,0 +1,5 @@
+- name: copy website contents
+  copy:
+   src: "files/harika/"
+   dest: "{{doc_root}}"
+  

@@ -1,0 +1,14 @@
+---
+- name: working loop with_sequence. This creates seuence of numbers or letters
+  hosts: localhost
+  become: true
+  tasks:
+   - name: task to crate multple users
+     user:
+      name: "user_{{item}}"
+      state: present
+    #  state: absent 
+    #  remove: true
+     with_sequence: start=1 end=10
+...
+

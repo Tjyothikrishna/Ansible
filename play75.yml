@@ -1,0 +1,15 @@
+#Demonstrate ansible plug-in lookup
+---
+- name: Play to demonstrate ansible plug-in lookup
+  hosts: localhost
+  become: true
+  vars:
+   f_content: "{{lookup('file','/etc/passwd')}}" #You are doing lookup for /etc/passwd which is of type file.
+                                                #the content of /etc/passwd is stored in f_content variable
+                                                #note that this is defined in vars section and not in tasks.
+                                                #becasue lookup is not a module attribute but a plug-in
+  tasks:
+  - name: Task to print f_content variable which contains the file contents
+    debug:
+     msg: "{{f_content}}"
+...

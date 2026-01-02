@@ -1,0 +1,8 @@
+---
+- name: Demonstrate Ansible facts
+  hosts: localhost
+  tasks:
+  - name: Print ansible fact variables
+    debug:
+     msg: "The kernel is {{ansible_facts['kernel']}} hostname is: {{ansible_facts['hostname']}} and ip is:  {{ansible_all_ipv4_addresses}}"
+...

@@ -1,0 +1,14 @@
+---
+- name: Call the script from shell module
+  hosts: [192.168.1.31,192.168.1.32]
+  become: true
+  tasks:
+  - name: push script to remote server
+    copy:
+     src: myscript.sh
+     dest: /tmp/myscript.sh
+     mode: '0555'
+  - name: Shell Module to execute a script
+    shell: /tmp/myscript.sh
+...
+

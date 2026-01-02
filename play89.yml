@@ -1,0 +1,28 @@
+---
+- name: play to demonstrate handlers in Ansible
+  hosts: localhost
+  become: true
+  tasks:
+   - name: include vars
+     include_vars: vars/inclvar.yml
+   - name: install {{pkg_name2}} package
+     yum:
+      name: "{{pkg_name2}}"
+      state: latest
+     notify: start_nfs 
+#Handler is processed with notify statement when change occurs in the task
+#If no change occurs, handler will be ignored. ie handler will not be notified
+#When you notify the same handler multiple times, it runs only once.
+#Handlers are invoked at the end of all tasks process. 
+#they are processed in the same order they appear in the handler section, and not in the order they
+#are notfied.
+   - name: Print me
+     debug:
+      msg: "Helo world"
+  handlers:
+   - name: start_nfs
+     service:
+      name: "{{ser_name}}"
+      state: started
+...
+ 

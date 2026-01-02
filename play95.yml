@@ -1,0 +1,18 @@
+---
+- name: Play to demonstrate if the variable is define using when conditional statement
+  hosts: localhost
+  become: true
+  remote_user: ansible
+#  vars:
+#   name1: alclabs
+  tasks:
+  - name: Check if variable is defined
+    debug:
+     msg: "The value of variable is {{name1}}"
+    when: name1 is defined
+  
+  - name: Test for not defined 
+    debug:
+     msg: "The value of variable is not defined"
+    when: name1 is not defined
+...

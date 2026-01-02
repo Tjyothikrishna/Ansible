@@ -1,0 +1,15 @@
+---
+- name: work with loop_control, work with index_var. This give fine-grained control inside loops.
+  hosts: localhost
+  become: true
+  tasks: 
+  - name: Install packages with loop control 
+    debug: 
+     msg: "Item No. {{i}} belongs to {{item}}"
+    loop:
+     - httpd
+     - php
+     - mariadb
+    loop_control:
+     index_var: i
+...

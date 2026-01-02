@@ -1,0 +1,17 @@
+---
+- name: Demonstarte when condition
+  hosts: sapprod
+  become: true
+  remote_user: ansible
+  tasks:
+  - name: Task to install package
+    yum:
+     name: httpd
+     state: latest
+    when: ansible_os_family == "RedHat" or ansible_os_family == "CentOS"
+  - name: Task to install package
+    apt:
+     name: apache2
+     state: latest
+    when: ansible_os_family == "Debian" or ansible_os_family == "Ubuntu"
+...

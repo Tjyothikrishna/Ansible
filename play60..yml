@@ -1,0 +1,16 @@
+---
+ - name: Copy multiple files with a loop
+   #hosts: sapprod
+   #hosts: [192.168.1.31, 192.168.1.32]
+   hosts:
+    - 192.168.1.31
+    - 192.168.1.32
+   become: true
+   tasks:
+   - name: copy file
+     copy:
+      src: "{{item.orig}}"
+      dest: "{{item.destn}}"
+     loop:
+      - {orig:/etc/httpd/conf/httpd.conf, destn:/var/tmp/httpd.conf}
+      - {orig:/var/www/html/index.html, destn:/var/tmp/index.html}

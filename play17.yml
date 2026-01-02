@@ -1,0 +1,9 @@
+---
+- name: Demonstrate debug module
+  hosts: localhost
+  tasks:
+   - name: Task to print the text using debug module
+     debug:
+      msg: "Helo World"
+...
+

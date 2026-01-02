@@ -1,0 +1,14 @@
+---
+- name: Demonstrate netsted loops with with_nested
+  hosts: localhost
+  tasks:
+   - name: generate user and group combination
+     debug:
+      msg: "user: {{item[0]}} belongs to group {{item[1]}}"
+     with_nested:
+      - [ 'mounika', 'harika' ]
+      - [ 'developers','operators' ]
+...
+#for i in 1 2 3
+#  for j in a b c
+#    print i j

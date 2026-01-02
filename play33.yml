@@ -1,0 +1,23 @@
+---
+- name: Play to copy file from local server to remove server(s)
+  hosts: 
+   - 192.168.1.31
+   - 192.168.1.32
+  become: true
+  vars:
+   fname: names.txt
+   dest_dir_name: /opt/ansible
+  tasks:
+   - name: Create dir if it dows not exists
+     file:
+      path: "{{dest_dir_name}}"
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
+   - name: Task to copy {{fname}} from local server {{ansible_hostname}}'s {{dest_dir_name}}.
+     copy:
+      src: "{{fname}}"
+      dest: "{{dest_dir_name}}"
+      backup: yes
+...  

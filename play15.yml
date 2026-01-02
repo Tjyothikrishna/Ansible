@@ -1,0 +1,13 @@
+---
+- name: Domonstrate lininfile - example5 - insert line after the pattern match.
+  hosts: localhost
+  become: true
+  tasks:
+  - name: insert ine after the match
+    lineinfile:
+     path: /home/ansible/playbooks/names.txt
+     line: "Mahesh"
+     insertafter: ^likhitha
+     backup: yes #take file backup before you modify the file
+...
+

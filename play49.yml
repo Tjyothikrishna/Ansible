@@ -1,0 +1,13 @@
+---
+- name: Play to reboot remote servers
+  hosts: 192.168.1.46
+  become: true
+  remote_user: ansible
+  tasks:
+   - name: Reboot remote servers
+#Module Name is reboot
+     reboot:
+      connect_timeout: 60
+      msg: "Control node is attempting to reboot your server...will be rebooted now"
+...
+#End of the play

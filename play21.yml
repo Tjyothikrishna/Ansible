@@ -1,0 +1,10 @@
+---
+- name: Demonstrate group variables in Ansible. 
+#Get variables defined in the file
+  hosts: sapqa
+  gather_facts: no
+  tasks:
+   - name: print variable values
+     debug: 
+      msg: "Os is: {{os}} and color is {{color}}"
+...

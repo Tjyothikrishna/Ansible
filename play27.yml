@@ -1,0 +1,17 @@
+---
+- name: Create a user with given variables
+  hosts: localhost
+  become: yes
+  remote_user: ansible
+  become_user: root
+  vars:
+   usr:
+    trainer:
+     name: sanjeevi
+    student:
+     name: ashish
+  tasks:
+   - name: Task to print variables
+     debug:
+     # msg: "The Trainer is : {{usr.trainer.name}} and student is: {{usr.student.name}}"
+      msg: "The Trainer is : {{usr['trainer']['name']}} and student is {{usr['student']['name']}}"

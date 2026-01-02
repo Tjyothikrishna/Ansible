@@ -1,0 +1,23 @@
+---
+- name: Demonstrate ansible tags
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Task1
+    debug:
+     msg: "Task1 - Red Planet"
+    tags: mars
+  - name: Task2
+    debug:
+     msg: "Task2 - Venus Planet"
+    tags: mist
+  - name: Task3
+    debug:
+     msg: "Task3 - Jupiter Planet"
+    tags: mosaic
+  - name: Task4
+    debug:
+     msg: "Task4 - Earth Planet"
+    tags: 
+     - blue
+     - green 

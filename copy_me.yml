@@ -1,0 +1,20 @@
+---
+- name: Play to copy file
+  hosts: all
+  vars_prompt:
+   - name: s_fname
+     prompt: "Provide source filenme(absolute path)"
+     private: no 
+   - name: d_fname 
+     prompt: "Provide destination filename(absolute path)"
+     private: no
+  gather_facts: no
+  become: true
+  remote_user: ansible
+  tasks:
+   - name: Copy  file
+     copy:
+      src: "{{s_fname}}"
+      dest: "{{d_fname}}"
+     ignore_errors: true
+

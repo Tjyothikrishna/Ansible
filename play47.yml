@@ -1,0 +1,27 @@
+---
+- name: Play to create multiple users with loop control
+  hosts: all
+  become: true
+  remote_user: ansible
+  vars:
+   trainees:
+    - lido1
+    - larry1
+    - curly1
+    - sandhill1
+    - bigbro1
+    - littlej1
+  vars_prompt:
+   name: passs
+   prompt: "Enter the default password for users"
+   private: yes
+   #passs: test@123
+  tasks:
+   - name: create users with loop structure
+     user:
+      name: "{{item}}"
+      password: "{{ passs | password_hash('sha512') }}"
+     loop: "{{trainees}}"
+...
+#End of the loop
+

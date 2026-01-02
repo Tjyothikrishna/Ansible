@@ -1,0 +1,12 @@
+---
+- name: Play to demonstrate when condition
+  hosts: localhost
+  vars:
+   allow: true
+  tasks:
+   - name:
+     debug:
+      msg: You are true
+     when: "{{allow}}"
+
+...

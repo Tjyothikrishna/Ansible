@@ -1,0 +1,42 @@
+--- 
+- name: play to implement handlers in while installing package, start service, enabled firewall etc.,
+  hosts: localhost
+  gather_facts: false
+  become: true
+  tasks:
+   - name: Tasks to install package
+     yum: 
+      name: "{{package}}"
+      state: latest
+     notify: #Notifying handlers only happen if the module results to change. If not change happens ie chage=false then handlers are not invoked
+     - startftpserver
+     - startfw
+     - addport
+     - restartfw
+     when: package is defined
+   - name: print failure message
+     fail:
+      msg: "You have not defined package name. user -e option package=pkgname while calling this play"
+     when: package is not defined
+  handlers:
+   - name: startftpserver
+     service: 
+      name: vsftpd
+      state: started
+   - name: startfw
+     service:
+      name: firewalld
+      state: restarted
+      enabled: yes
+   - name: addport
+     firewalld:
+      service: ftp
+      state: enabled
+      immediate: yes
+      permanent: yes
+   - name: restartfw
+     service:
+      name: firewalld
+      state: restarted
+...
+     

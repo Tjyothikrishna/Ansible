@@ -1,0 +1,5 @@
+- name: Task to start {{ser_name}} service
+  service:
+   name: "{{ser_name}}"
+   state: started
+  when: out.changed 

@@ -1,0 +1,22 @@
+--- 
+- name: Demonstrate fail module
+  hosts: localhost
+  become: true
+  gather_facts: false
+  tasks:
+  - name: Install a package
+    yum:
+     name: "{{package}}"
+     state: installed
+    when: package is defined
+  - name: task to bail out if the package variable is not defined
+    fail:
+     msg: "The package variable is not defined"
+    when: package is not defined
+    ignore_errors: true
+    #Play will get exited when a task fails. However, you use ignore_errors statement to continue your play with rest of the tasks.
+  - name: Will I execute
+    debug:
+     msg: I am in last task.. Check if I am being printed on the screen
+
+...

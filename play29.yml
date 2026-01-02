@@ -1,0 +1,13 @@
+---
+- name: Demonstrate debug var 
+  hosts: localhost
+  become: true
+  tasks:
+   - name: Command module example
+     command: ls
+     register: out
+   - name: Work with debug
+     debug:
+      #var: out.stdout_lines
+      var: out['stdout_lines']
+...

@@ -1,0 +1,21 @@
+---
+- name: Create a user with given variables
+  hosts: localhost
+  become: yes
+  remote_user: ansible
+  become_user: root
+  vars_files:
+   - vars/usr_data
+  tasks:
+   - name: Create a group {{grpname}} which will e used as a secondary group for the created user
+     group:
+      name: "{{grpname}}"
+      state: present
+   - name: Create {{usrname}} with secondary group {{grpname}}
+     user:
+      name: "{{usrname}}"
+      password: "{{usr_pas|password_hash('sha512')}}"
+      update_password: on_create
+      groups: "{{grpname}}"
+      state: present
+...

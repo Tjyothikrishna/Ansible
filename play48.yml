@@ -1,0 +1,15 @@
+---
+- name: Demonstrate ansible plug-in lookup
+#We read file content using lookup plug-in
+# 
+  hosts: localhost
+  vars:
+    myoutput: "{{lookup('file','/etc/passwd')}}"
+#myutput variable stores entire /etc/password content
+  tasks:
+  - name: Task to print the file content # file is read above vars variable using  lookup plug-in
+    debug:
+     msg: "{{myoutput}}"
+...
+#End of the play
+

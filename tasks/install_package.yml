@@ -1,0 +1,6 @@
+- name: Install {{pkg_name2}} Package
+  yum:
+   name: "{{pkg_name2}}"
+   state: latest
+  register: out
+

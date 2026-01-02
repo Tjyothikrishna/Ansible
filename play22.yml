@@ -1,0 +1,13 @@
+---
+- name: Demonstrate variables in Ansible. 
+#Get variables defined in the file
+  hosts: localhost
+  vars:
+   os: linux
+  tasks:
+   - name: print variable values
+     debug: 
+      msg: "Os is: {{ os }}"
+...
+  
+   

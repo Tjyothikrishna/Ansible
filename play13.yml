@@ -1,0 +1,16 @@
+---
+- name: Domonstrate lininfile - example3 - Deny direct root user login via ssh.
+  hosts: localhost
+  become: true
+  tasks:
+  - name: replace the line
+    lineinfile:
+     path: /etc/ssh/sshd_config
+     regexp: ^PermitRootLogin
+     line: "PermitRootLogin = no"
+  - name: Restart the sshd service
+    service:
+     name: sshd
+     state: restarted
+...
+

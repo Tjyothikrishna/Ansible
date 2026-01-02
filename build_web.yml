@@ -1,0 +1,26 @@
+---
+- name: Build Web
+  hosts: localhost
+#  vars_files: myweb.yml
+  become: true
+  tasks:
+  - name: Get the variables
+    include_vars: myweb.yml
+  - name: Install Packages
+    include_tasks: tasks/web_install.yml
+  - name: Install Packages
+    include_tasks: tasks/firewalld_install.yml
+#  - name: Add FirewallPort
+#    include_tasks: tasks/firewall_addport.yml
+  - name: Copy files
+    include_tasks: tasks/copy_web.yml
+  - name: crate conf file
+    include_tasks: tasks/create_conf.yml
+#  handlers:
+#  - name: Call Handler for web
+#    include_tasks: handlers/web_start.yml
+#  - name: Call Handler for firewalld
+#    include_tasks: handlers/firewall_start.yml
+...
+ 
+

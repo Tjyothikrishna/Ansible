@@ -1,0 +1,14 @@
+---
+- name: Demonstrate ansible variables
+  hosts: localhost
+  vars: 
+   color: red
+  tasks:
+   - name: Print the value of variable defined above
+     debug:
+      #msg: "The value is: {{ color }}"  #This works
+      #msg: The value is: {{ color }} ==> This doesnt work
+      #msg: {{ color }} is bright ==>This doesnt work
+      msg: And the {{ color }} is bright  #This works
+#Note that msg without double quote works for variale if there is text before and after the variable. Else wont!!
+...

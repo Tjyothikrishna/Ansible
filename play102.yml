@@ -1,0 +1,25 @@
+---
+- name: play to mount dvd 
+  hosts: localhost
+  become: true
+  tasks:
+   - name: mount dvd using mount module
+     mount:
+      src: /dev/sr0
+      path: /mnt
+      opts: ro #Options read only as it is dvd
+      fstype: iso9660 #iso image fstype is iso9660
+      state: absent  #mounted will add entry in /etc/fstab and then mounted
+
+                    #absent will unmount and remove the entry from /etc/stab
+                    #unmounted will only unmount the fs but not remove entry from /etc/fstab
+                    #present will just mount the mount point but add the entry in /etc/fstab
+ 
+   - name: Verify the mounts
+     command:
+      cmd: "df -h"
+     register: out
+   - name: Print the output
+     debug:
+      msg: "{{out.stdout_lines}}"
+...

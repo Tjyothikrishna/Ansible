@@ -1,0 +1,21 @@
+---
+- name: Play to work with loop
+  hosts: 192.168.2.31
+  vars:
+   users:
+    - name: rosy
+      gecos: "Dev Ops User"
+    - name: charles
+      gecos: "Web Admin User"
+    - name: mary
+      gecos: "Network Admin user"
+  tasks:
+   - name: Create set of users 
+     user:
+      name: "{{item.name}}"
+      comment: "{{item.gecos}}"
+      state: present    
+     loop: "{{users}}"
+...
+#End of the play
+

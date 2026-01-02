@@ -1,0 +1,27 @@
+---
+- name:  using uri modue to test if the page is working
+  hosts: localhost
+  become: true
+  gather_facts: false
+  tasks:
+   - name: Demonstrate uri module to check if the give url is working
+     uri:
+      url: http://192.168.1.131/index.html1
+  #    return_content: yes
+      validate_certs: false
+      timeout: 5
+     register: out
+     ignore_errors: true
+   - name: print the content
+     debug:
+#      var: out
+#      msg: "{{out.content}}"
+      msg: "Given website is working"
+     when: out.status == 200
+   - name: print the content
+     debug:
+      msg: "Given website is NOT working"
+     when: not out.status == 200
+   
+...
+  

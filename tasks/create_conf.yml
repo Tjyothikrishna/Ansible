@@ -1,0 +1,5 @@
+- name: crate conf file
+  template:
+   src: myweb.j2
+   dest: /etc/httpd/conf.d/myweb.conf
+

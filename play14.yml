@@ -1,0 +1,12 @@
+---
+- name: Domonstrate lininfile - example4 - insert line before the pattern match.
+  hosts: localhost
+  become: true
+  tasks:
+  - name: insert ine before the match
+    lineinfile:
+     path: /home/ansible/playbooks/names.txt
+     line: "Amrutha is here"
+     insertbefore: ^jk
+...
+

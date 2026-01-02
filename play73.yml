@@ -1,0 +1,9 @@
+---
+- name: print all the hosts in the inventory
+  hosts: all
+  gather_facts: False
+  tasks:
+   - name: use reserved variable groups to print all the servers in the inventory
+     debug:
+      msg: "{{item}}"
+     with_items: "{{groups['all']}}"

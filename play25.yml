@@ -1,0 +1,17 @@
+---
+- name: Create a user with given variables
+  hosts: localhost
+  become: yes
+  remote_user: ansible
+  become_user: root
+  vars:
+   usr:
+    usr_name: joe
+    usr_pass: joe_pass
+    usr_first_name: Joe
+    usr_last_name: Britt
+    usr_shell: /bin/bash 
+  tasks:
+   - name: Task to print variables
+     debug:
+      msg: "usr_name: {{usr.usr_name}} usr_pass: {{usr.usr_pass}} usr_fullname: {{usr.usr_first_name}} {{usr.usr_last_name}} usr_shell: {{usr.usr_shell}}"

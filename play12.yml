@@ -1,0 +1,15 @@
+---
+- name: Domonstrate lininfile - example2
+  hosts: localhost
+  become: true
+  tasks:
+  - name: create a file and add the line
+    lineinfile:
+     path: /home/ansible/statements.txt
+     line: "Ashish and Jaya are speaking and Sowjanya is listening to it"
+     state: present
+     create: true
+     owner: ansible
+     group: ansible
+...
+

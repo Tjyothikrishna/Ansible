@@ -1,0 +1,40 @@
+#Anisble has special tags
+#a)always
+#b)never
+#c)all
+#you can invoke multiple tags with --tags tag1,tag2 ..
+#You can skip tags with --skip-tags tag1,tag2...
+#you can invoke all the tags with --tags all; this is default behaviour
+---
+- name: Demonstrate ansible tags
+  hosts: localhost
+  become: true
+  tasks:
+  - name: Task1
+    debug:
+     msg: "Task1 - Red Planet"
+    tags: mars
+  - name: Task2
+    debug:
+     msg: "Task2 - Venus Planet"
+    tags: mist
+  - name: Task3
+    debug:
+     msg: "Task3 - Jupiter Planet"
+    tags: mosaic
+  - name: Task4
+    debug:
+     msg: "Task4 - Earth Planet"
+    tags: 
+     - blue
+     - green 
+  - name: Task5
+    debug:
+     msg: "Task5 - i am in always"
+    tags: always
+  - name: Task6
+    debug:
+     msg: "Task6 - i dont run"
+    tags: never 
+#Always tags causes the task to always be executed, even if you did not specifiy it --tags option
+

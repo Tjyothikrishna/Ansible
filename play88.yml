@@ -1,0 +1,17 @@
+---
+- name: Install Package and start the service using include_vars and include_tasks
+#This increase the play modularity. Taks defined outside the play can be referenced or called by main plays.
+  hosts: localhost
+  become: true
+  tasks:
+   - name: Include Variables
+     include_vars: vars/inclvar.yml
+   - name: Include Task to install the package
+     include_tasks: tasks/install_package.yml
+   - name: print it
+     debug: 
+      var: out
+   - name: Include Task to start the service
+     include_tasks: tasks/start_service.yml
+...
+

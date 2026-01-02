@@ -1,0 +1,17 @@
+---
+- name: Play to demonstrate when condition
+  hosts: localhost
+  become: true
+  vars:
+   environ: production
+  tasks: 
+  - name: Task to start a webserver
+    service:
+     name: httpd
+     state: started
+    when: environ == 'production'
+  - name: Task to print message
+    debug:
+     msg: "You can perform this task in this environment {{environ}}"
+    when: environ == 'development'
+...

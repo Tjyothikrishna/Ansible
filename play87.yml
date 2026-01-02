@@ -1,0 +1,19 @@
+---
+- name: Demonstrte include_vars
+  hosts: localhost
+  become: true
+  tasks:
+   - name: Task-1.This task is to fetch the variable for this playbook.
+     include_vars: vars/inclvar.yml
+   - name: Task-2
+     yum:
+      name:
+       - "{{pkg_name1}}"
+       - "{{pkg_name2}}"
+      state: latest
+   - name: Task-3
+     service:
+      name: "{{ser_name}}"
+      state: "{{ser_state}}"
+...
+

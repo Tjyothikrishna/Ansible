@@ -1,0 +1,16 @@
+---
+- Install multiple packages
+  hosts: sapprod
+  become: yes
+  tasks:
+  - name: Install packages
+    yum:
+     name: "{{item}}"
+     state: present
+    loop:
+     - vim
+     - git
+     - wget
+     - curl
+...
+

@@ -1,0 +1,19 @@
+---
+- name: Demonstrate prompt variables
+  hosts: localhost
+  vars_prompt:
+   - name: db_name
+     prompt: "Enter database name"
+     private: no
+   - name: db_pass
+     prompt: "Enter dbpassword"
+     private: yes
+   - name: db_host
+     prompt: "Enter db hostname"
+     private: no
+     default: trainer.alclabs.in
+  tasks:
+   - name: To print the variable
+     debug:
+      msg: "You entered db name as {{db_name}} and its password is {{db_pass}} dbhost is {{db_host}}"
+...

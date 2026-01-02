@@ -1,0 +1,20 @@
+---
+- name: Demonstrate ansible register variable
+  hosts: localhost
+  become: true
+  remote_user: ansible
+  tasks:
+   - name: Task to register a variable
+     service:
+      name: crond
+      state: restarted
+     register: myvar
+   - name: print myvar content
+     debug:
+      #msg: The content is {{myvar}}
+      #msg: The daemon is {{myvar.name}} and it is  {{myvar.state}}
+    #  msg: The daemon is {{myvar['name']}} and it is  {{myvar['state']}}
+      var: myvar 
+...
+
+

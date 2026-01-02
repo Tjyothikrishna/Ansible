@@ -1,0 +1,26 @@
+---
+- name: pay to check to install new kernel, if it doesnt exists download
+  hosts: localhost
+  become: true
+  vars:
+   pkg_name: /home/ansible/playbooks/kernel-5.14.0-503.11.1.el9_5.x86_64.rpm
+  tasks:
+   - name: Check if the package exists
+     stat:
+      path: /home/ansible/playbooks/kernel-5.14.0-503.11.1.el9_5.x86_64.rpm
+     register: result
+   - name: Download the package if it doesnt exits
+     get_url:
+      url: http://192.168.1.131:81/BaseOS/Packages/kernel-5.14.0-503.11.1.el9_5.x86_64.rpm
+      dest: /home/ansible/playbooks/kernel-5.14.0-503.11.1.el9_5.x86_64.rpm
+     when: not result.stat.exists
+   - name: Check if the package exists
+     stat:
+      path: /home/ansible/playbooks/kernel-5.14.0-503.11.1.el9_5.x86_64.rpm
+     register: result
+   - name: Install the package
+     yum:
+      name: "{{pkg_name}}"
+      state: installed
+     when: result.stat.exists
+...

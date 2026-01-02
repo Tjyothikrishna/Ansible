@@ -1,0 +1,15 @@
+---
+- name: Play to copy file from one location to another in the destination server
+  hosts: 
+   - 192.168.1.31
+  become: true
+  vars:
+   fname: /etc/hosts
+   dest_dir_name: /home/ansible
+  tasks:
+   - name: Task to download(fetch) {{fname}} from remote server {{ansible_hostname}} local {{dest_dir_name}}.
+     fetch:
+      src: "{{fname}}"
+      dest: "{{dest_dir_name}}/"
+      flat: true
+...  

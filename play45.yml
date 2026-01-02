@@ -1,0 +1,8 @@
+---
+- name: Play to demonstrate loop control structure in ansible
+  hosts: localhost
+  tasks:
+   - name: Demonstrate loop
+     debug:
+      msg: "the value is {{item}}"
+     loop: [ anindita, baba, anusha ]

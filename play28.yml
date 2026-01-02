@@ -1,0 +1,14 @@
+---
+- name: demonstrate command module and capture it output and then print
+  hosts: localhost
+  become: true
+  tasks:
+   - name: Execute uptime command
+     command:
+      #cmd: /usr/bin/uptime
+      cmd: vgs
+     register: myvar
+   - name: print value of the register variable
+     debug:
+      msg: "{{myvar.stdout_lines}}"
+...
